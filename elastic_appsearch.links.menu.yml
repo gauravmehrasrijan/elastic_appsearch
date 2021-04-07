@@ -1,0 +1,6 @@
+elastic_appsearch.appsearch_form:
+  title: 'Appsearch Settings'
+  route_name: elastic_appsearch.appsearch_form
+  description: 'Configure appsearch credentials and basic settings.'
+  parent: system.admin_config_system
+  weight: 99

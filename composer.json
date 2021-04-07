@@ -1,0 +1,16 @@
+{
+    "name": "elastic_appsearch",
+    "type": "drupal-module",
+    "description": "CCF module to interact with elastic app search.",
+    "keywords": [
+    ],
+    "homepage": "https://github.com/gauravmehrasrijan/elastic_appsearch",
+    "minimum-stability": "dev",
+    "support": {
+        "issues": "https://github.com/gauravmehrasrijan/elastic_appsearch/issues",
+        "source": "https://github.com/gauravmehrasrijan/elastic_appsearch"
+    },
+    "require": {
+        "elastic/app-search": "7.11.1"
+    }
+}

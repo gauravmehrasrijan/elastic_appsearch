@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * Contains elastic_appsearch.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function elastic_appsearch_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the elastic_appsearch module.
+    case 'help.page.elastic_appsearch':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Drupal module to interact with elastic app search.') . '</p>';
+      return $output;
+
+    default:
+  }
+}

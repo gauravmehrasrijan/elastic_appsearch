@@ -1,0 +1,9 @@
+elastic_appsearch.appsearch_form:
+  path: '/admin/config/elastic_appsearch/settings'
+  defaults:
+    _form: '\Drupal\elastic_appsearch\Form\AppsearchForm'
+    _title: 'AppsearchForm'
+  requirements:
+    _permission: 'access administration pages'
+  options:
+    _admin_route: TRUE
