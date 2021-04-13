@@ -1,0 +1,5 @@
+elastic_appsearch-library:
+  js:
+    js/sync.js: {}
+  dependencies:
+    - core/drupal.ajax

@@ -1,0 +1,12 @@
+entity.server.add_form:
+  route_name: entity.server.add_form
+  title: 'Add Server'
+  appears_on:
+    - entity.server.collection
+    - entity.engine.collection
+entity.engine.add_form:
+  route_name: entity.engine.add_form
+  title: 'Add Engine'
+  appears_on:
+    - entity.engine.collection
+    - entity.server.collection

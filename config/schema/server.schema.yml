@@ -1,0 +1,24 @@
+elastic_appsearch.server.*:
+  type: config_entity
+  label: 'Server config'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+    description:
+      type: string
+      label: 'Short Description'
+    uuid:
+      type: string
+    host:
+      label: 'Backend Endpoint'
+      type: uri
+    secret:
+      type: string
+      label: 'Secret Key'
+    status:
+      label: 'Server Status'
+      type: boolean

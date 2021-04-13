@@ -4,3 +4,25 @@ elastic_appsearch.appsearch_form:
   description: 'Configure appsearch credentials and basic settings.'
   parent: system.admin_config_system
   weight: 99
+
+elastic_appsearch.overview:
+  title: Elastic AppSearch
+  description: 'Create and index elastic app serach engine document.'
+  route_name: entity.server.collection
+  parent: system.admin_config_search
+
+# Server menu items definition
+entity.server.collection:
+  title: 'Server'
+  route_name: entity.server.collection
+  description: 'List Server (bundles)'
+  parent: elastic_appsearch.overview
+  weight: 99
+
+# Engine menu items definition
+entity.engine.collection:
+  title: 'Engine'
+  route_name: entity.engine.collection
+  description: 'List Engine (bundles)'
+  parent: elastic_appsearch.overview
+  weight: 99
