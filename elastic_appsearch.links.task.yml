@@ -1,35 +1,25 @@
 elastic_appsearch.overview:
-  route_name: entity.server.collection
+  route_name: entity.elastic_appsearch_server.collection
   base_route: elastic_appsearch.overview
   title: 'Overview'
-entity.server.edit_form:
-  route_name: entity.server.edit_form
+entity.elastic_appsearch_server.edit_form:
+  route_name: entity.elastic_appsearch_server.edit_form
   base_route: elastic_appsearch.overview
   title: 'Edit'
-entity.engine.canonical:
-  route_name: entity.engine.canonical
-  base_route: entity.engine.canonical
+  
+entity.elastic_appsearch_engine.canonical:
+  route_name: entity.elastic_appsearch_engine.canonical
+  base_route: entity.elastic_appsearch_engine.canonical
   title: 'View'
-  weight: 5
-entity.engine.edit_form:
-  route_name: entity.engine.edit_form
-  base_route: entity.engine.canonical
+
+entity.elastic_appsearch_engine.edit_form:
+  route_name: entity.elastic_appsearch_engine.edit_form
+  base_route: entity.elastic_appsearch_engine.canonical
   title: 'Edit'
   weight: 6
 
-entity.engine.schema:
+entity.elastic_appsearch_engine.schema:
   title: 'Schema'
-  route_name: entity.engine.schema
-  base_route: entity.engine.canonical
+  route_name: entity.elastic_appsearch_engine.schema
+  base_route: entity.elastic_appsearch_engine.canonical
   weight: 10
-
-# entity.search_api_index.fields:
-#   title: 'Fields'
-#   route_name: entity.search_api_index.fields
-#   base_route: entity.search_api_index.canonical
-#   weight: 10
-# entity.search_api_index.processors:
-#   route_name: entity.search_api_index.processors
-#   base_route: entity.search_api_index.canonical
-#   title: 'Processors'
-#   weight: 20

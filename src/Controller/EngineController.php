@@ -78,18 +78,18 @@ class EngineController extends ControllerBase {
    * @return array
    *   An array suitable for drupal_render().
    */
-  public function page(EngineInterface $engine) {
+  public function page(EngineInterface $elastic_appsearch_engine) {
     // Build the search index information.
     $render = [
       'view' => [
         '#theme' => 'engine',
-        '#engine' => $engine,
+        '#engine' => $elastic_appsearch_engine,
       ],
     ];
 
-    if ($engine->status()) {
+    if ($elastic_appsearch_engine->status()) {
       // Attach the index status form.
-      $render['form'] = $this->formBuilder()->getForm('Drupal\elastic_appsearch\Form\EngineStatusForm', $engine);
+      $render['form'] = $this->formBuilder()->getForm('Drupal\elastic_appsearch\Form\EngineStatusForm', $elastic_appsearch_engine);
     }
     return $render;
   }

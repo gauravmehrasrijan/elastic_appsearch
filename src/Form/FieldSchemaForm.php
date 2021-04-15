@@ -167,7 +167,7 @@ class FieldSchemaForm extends EntityForm {
    *   The build structure.
    */
   protected function buildFieldsTable(array $fields) {
-
+      
     $types = $this->entity->supportedtypes();
     $_fields = $this->entity->getEngineFields();
     $build = [
@@ -199,7 +199,7 @@ class FieldSchemaForm extends EntityForm {
       ];
       $build['fields'][$key]['id'] = [
         '#type' => 'textfield',
-        '#default_value' => $key,
+        '#default_value' => 'eas_'.$key,
         '#attributes' => ['readonly' => 'readonly'],
         '#required' => TRUE,
         '#size' => 35,
@@ -225,15 +225,19 @@ class FieldSchemaForm extends EntityForm {
     return $build;
   }
 
-  public function formatSchema($fields){
+  public function formatSchema($fields, $json = false){
     $schema = [];
     foreach($fields as $field){
       if(isset($field['enable']) && $field['enable'] == 1){
-        $schema[] = [
-          'label' => $field['title'],
-          'field_id' => $field['id'],
-          'type' => $field['type']
-        ];
+        if($json){
+          $schema[$field['id']] = $field['type'];
+        }else{
+          $schema[] = [
+            'label' => $field['title'],
+            'field_id' => $field['id'],
+            'type' => $field['type']
+          ];
+        } 
       }
     }
     return $schema;
@@ -251,6 +255,11 @@ class FieldSchemaForm extends EntityForm {
     $engine->setSchema($this->formatSchema($field_values));
 
     $status = $engine->save();
+    
+    if($status){
+      $engine->setItemsTrackable();
+      $engine->getClient()->updateSchema($engine->id(),$this->formatSchema($field_values, true));
+    }
 
     switch ($status) {
       case SAVED_NEW:
@@ -264,7 +273,7 @@ class FieldSchemaForm extends EntityForm {
           '%label' => $engine->label(),
         ]));
     }
-    $form_state->setRedirectUrl($engine->toUrl('collection'));
+    $form_state->setRedirectUrl($engine->toUrl('canonical'));
   }
 
   /**

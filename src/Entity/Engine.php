@@ -6,12 +6,13 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\elastic_appsearch\ElasticSearchInterface;
 use Drupal\elastic_appsearch\Utility\Database;
+use Drupal\elastic_appsearch\Utility\BatchHelper;
 
 /**
  * Defines the Engine entity.
  *
  * @ConfigEntityType(
- *   id = "engine",
+ *   id = "elastic_appsearch_engine",
  *   label = @Translation("Engine"),
  *   handlers = {
  *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
@@ -21,12 +22,14 @@ use Drupal\elastic_appsearch\Utility\Database;
  *       "edit" = "Drupal\elastic_appsearch\Form\EngineForm",
  *       "delete" = "Drupal\elastic_appsearch\Form\EngineDeleteForm",
  *       "schema" = "Drupal\elastic_appsearch\Form\FieldSchemaForm",
+ *       "reindex" = "Drupal\elastic_appsearch\Form\EngineReindexConfirmForm",
+ *       "clear" = "Drupal\elastic_appsearch\Form\EngineClearIndexConfirmForm"
  *     },
  *     "route_provider" = {
  *       "html" = "Drupal\elastic_appsearch\EngineHtmlRouteProvider",
  *     },
  *   },
- *   config_prefix = "engine",
+ *   config_prefix = "elastic_appsearch_engine",
  *   admin_permission = "administer site configuration",
  *   entity_keys = {
  *     "id" = "id",
@@ -34,11 +37,11 @@ use Drupal\elastic_appsearch\Utility\Database;
  *     "uuid" = "uuid"
  *   },
  *   links = {
- *     "canonical" = "/admin/config/search/elastic_appsearch/engine/{engine}",
- *     "add-form" = "/admin/config/search/elastic_appsearch/engine/add",
- *     "edit-form" = "/admin/config/search/elastic_appsearch/engine/{engine}/edit",
- *     "delete-form" = "/admin/config/search/elastic_appsearch/engine/{engine}/delete",
- *     "collection" = "/admin/config/search/elastic_appsearch/engine"
+ *     "canonical" = "/admin/config/search/elastic-appsearch/engine/{elastic_appsearch_engine}",
+ *     "add-form" = "/admin/config/search/elastic-appsearch/engine/add",
+ *     "edit-form" = "/admin/config/search/elastic-appsearch/engine/{elastic_appsearch_engine}/edit",
+ *     "delete-form" = "/admin/config/search/elastic-appsearch/engine/{elastic_appsearch_engine}/delete",
+ *     "collection" = "/admin/config/search/elastic-appsearch/engine"
  *   }
  * )
  */
@@ -109,13 +112,14 @@ class Engine extends ConfigEntityBase implements EngineInterface {
     return $this->datasources;
   }
 
-  public function getClient(){
-
-    $_server = \Drupal::entityTypeManager()
-      ->getStorage('server')
+  protected function getServerInstance(){
+    return \Drupal::entityTypeManager()
+      ->getStorage('elastic_appsearch_server')
       ->load($this->getServer());
+  }
 
-    if($_server){
+  public function getClient(){
+    if($_server = $this->getServerInstance()){
       return $_server->getClient();
     }
   }
@@ -199,11 +203,7 @@ class Engine extends ConfigEntityBase implements EngineInterface {
    * {@inheritdoc}
    */
   public function getTrackerInstance() {
-    if (!$this->trackerInstance) {
-      $this->trackerInstance = \Drupal::service('elastic_appsearch.tracker')->getInstance($this);
-      return $this->trackerInstance;
-    }
-
+    $this->trackerInstance = \Drupal::service('elastic_appsearch.tracker')->getInstance($this);
     return $this->trackerInstance;
   }
 
@@ -219,4 +219,11 @@ class Engine extends ConfigEntityBase implements EngineInterface {
   public function indexDocuments($documents){
     return $this->getClient()->indexDocuments($this->id(), $documents);
   }
+
+  public function performTasks($tasks){
+
+    BatchHelper::setup($this, $tasks, ['limit'=>100, 'batch_size'=>100]);
+    
+  }
+
 }

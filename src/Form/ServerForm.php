@@ -83,9 +83,7 @@ class ServerForm extends EntityForm {
    */
   public function save(array $form, FormStateInterface $form_state) {
     $server = $this->entity;
-    // print_r($server); exit;
     $status = $server->save();
-    // print_r($status); exit;
     switch ($status) {
       case SAVED_NEW:
         $this->messenger()->addMessage($this->t('Created the %label Server.', [

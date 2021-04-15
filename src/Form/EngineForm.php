@@ -112,7 +112,7 @@ class EngineForm extends EntityForm {
   }
 
   public function getActiveEngines(){
-    $servers = \Drupal::entityTypeManager()->getStorage('server')->loadMultiple();
+    $servers = \Drupal::entityTypeManager()->getStorage('elastic_appsearch_server')->loadMultiple();
     
     $server_collection = [];
 

@@ -63,7 +63,7 @@ class EngineStatusForm extends FormBase {
       ],
     ];
 
-    $has_remaining_items = TRUE; //($engine->getTrackerInstance()->getRemainingItemsCount() > 0);
+    $has_remaining_items = ($engine->getTrackerInstance()->getRemainingItemsCount() > 0);
     $all_value = $this->t('all', [], ['context' => 'items to index']);
     $limit = [
       '#type' => 'textfield',
@@ -116,25 +116,25 @@ class EngineStatusForm extends FormBase {
     ];
 
     // Add actions for reindexing and for clearing the index.
-    // $form['actions']['#type'] = 'actions';
-    // $form['actions']['reindex'] = [
-    //   '#type' => 'submit',
-    //   '#value' => $this->t('Queue all items for reindexing'),
-    //   '#name' => 'reindex',
-    //   '#button_type' => 'danger',
-    // ];
-    // $form['actions']['clear'] = [
-    //   '#type' => 'submit',
-    //   '#value' => $this->t('Clear all indexed data'),
-    //   '#name' => 'clear',
-    //   '#button_type' => 'danger',
-    // ];
-    // $form['actions']['rebuild_tracker'] = [
-    //   '#type' => 'submit',
-    //   '#value' => $this->t('Rebuild tracking information'),
-    //   '#name' => 'rebuild_tracker',
-    //   '#button_type' => 'danger',
-    // ];
+    $form['actions']['#type'] = 'actions';
+    $form['actions']['reindex'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Clear all items and re-index'),
+      '#name' => 'reindex',
+      '#button_type' => 'danger',
+    ];
+    $form['actions']['clear'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Clear all indexed data'),
+      '#name' => 'clear',
+      '#button_type' => 'danger',
+    ];
+    $form['actions']['rebuild_tracker'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Re-index tracked rows'),
+      '#name' => 'rebuild_tracker',
+      '#button_type' => 'danger',
+    ];
 
     return $form;
   }
@@ -156,32 +156,20 @@ class EngineStatusForm extends FormBase {
     
     $engine = $form['#engine'];
 
-
     switch ($form_state->getTriggeringElement()['#name']) {
       case 'index_now':
-        $values = $form_state->getValues();
-        try {
-          $this->setBatch($engine, $values['batch_size'], $values['limit']);
-        }
-        catch (SearchApiException $e) {
-          $this->messenger->addWarning($this->t('Failed to create a batch, please check the batch size and limit.'));
-        }
+        $engine->performTasks(['index']);
         break;
-
       case 'reindex':
-        $form_state->setRedirect('entity.search_api_index.reindex', ['search_api_index' => $index->id()]);
+        $form_state->setRedirect('entity.elastic_appsearch_engine.reindex', ['elastic_appsearch_engine' => $engine->id()]);
         break;
 
       case 'clear':
-        $form_state->setRedirect('entity.search_api_index.clear', ['search_api_index' => $index->id()]);
+        $form_state->setRedirect('entity.elastic_appsearch_engine.clear', ['elastic_appsearch_engine' => $engine->id()]);
         break;
-
       case 'rebuild_tracker':
-        $form_state->setRedirect('entity.search_api_index.rebuild_tracker', ['search_api_index' => $index->id()]);
-        break;
-
-      case 'track_now':
-        $this->getIndexTaskManager()->addItemsBatch($index);
+        $engine->getTrackerInstance()->trackAllItemsUpdated();
+        $engine->performTasks(['index']);
         break;
     }
 
@@ -223,7 +211,7 @@ class EngineStatusForm extends FormBase {
     $process_nodes = $engine->getTrackerInstance()->getRemainingItems($batch_size);
     foreach($process_nodes as $nid){
       
-      $indexNodeCollection[] = self::prepareNodeToIndex($nid, $_fields);
+      $indexNodeCollection[] = static::prepareNodeToIndex($nid, $_fields);
 
       $context['sandbox']['progress']++;
       $context['sandbox']['current_node'] = $nid;
@@ -243,14 +231,25 @@ class EngineStatusForm extends FormBase {
 
   }
 
-  public function prepareNodeToIndex($nid, $_fields){
+  public static function prepareNodeToIndex($nid, $_fields){
     $response = [];
     $node_id = filter_var($nid, FILTER_SANITIZE_NUMBER_INT);
     $node = \Drupal\node\Entity\Node::load($node_id);
     $response['id'] = $node_id;
     foreach ($node->getFields() as $name => $field) {
       if(isset($_fields[$name])){
-        $response[$name] = $field->getString();
+        // $response[$name] = $field->getString();
+        $field_type = $field->getFieldDefinition()->getType();
+        if($field_type == 'entity_reference'){
+          $target_type = $field->getFieldDefinition()->getSetting('target_type');
+          if ($target_type == 'taxonomy_term'){
+            foreach($field->referencedEntities() as $entity_reference){
+              $response[$name][] = $entity_reference->getName();
+            }
+          }
+        }else{
+          $response[$name]  = $field->getString();
+        }
       }
     }
     return $response;

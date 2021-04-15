@@ -1,4 +1,4 @@
-elastic_appsearch.engine.*:
+elastic_appsearch.elastic_appsearch_engine.*:
   type: config_entity
   label: 'Engine config'
   mapping:

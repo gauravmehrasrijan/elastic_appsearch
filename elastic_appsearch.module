@@ -54,23 +54,3 @@ function elastic_appsearch_theme() {
     ]
     ];
 }
-
-
-// /**
-//  * Implements hook_entity_operation().
-//  */
-// function elastic_appsearch_entity_operation_alter(array &$operations, $entity) {
-//   $entityTypeId = $entity->getEntityTypeId();
-  
-//   if ($entityTypeId !== 'server') {
-//     return;
-//   }
-
-//   // print_r($operations); exit;
-//   $enigines = Url::fromRoute('entity.engine.collection', ['server'=>$entity->id()]);
-//   $operations['engines'] = array(
-//       'title' => t('Engines'),
-//       'weight' => 20,
-//       'url' => $enigines,
-//   );
-// }

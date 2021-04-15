@@ -1,4 +1,4 @@
-elastic_appsearch.server.*:
+elastic_appsearch.elastic_appsearch_server.*:
   type: config_entity
   label: 'Server config'
   mapping:

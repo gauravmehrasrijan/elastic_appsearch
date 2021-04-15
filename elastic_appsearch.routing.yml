@@ -8,10 +8,34 @@ elastic_appsearch.appsearch_form:
   options:
     _admin_route: TRUE
 
-elastic_appsearch.engine.canonical:
-  path: '/admin/config/search/elastic_appsearch/engine/{engine}'
+elastic_appsearch.elastic_appsearch_engine.canonical:
+  path: '/admin/config/search/elastic-appsearch/engine/{elastic_appsearch_engine}'
   defaults:
     _controller: '\Drupal\elastic_appsearch\Controller\EngineController::page'
+  requirements:
+    _permission: 'access administration pages'
+  options:
+    parameters:
+      elastic_appsearch_engine:
+        type: 'entity:elastic_appsearch_engine'
+        with_config_overrides: TRUE
+
+entity.elastic_appsearch_engine.schema:
+  path: '/admin/config/search/elastic-apsearch/engine/{elastic_appsearch_engine}/schema'
+  options:
+    parameters:
+      elastic_appsearch_engine:
+        tempstore: TRUE
+        type: 'entity:elastic_appsearch_engine'
+  defaults:
+    _entity_form: 'elastic_appsearch_engine.schema'
+  requirements:
+    _permission: 'access administration pages'
+
+entity.elastic_appsearch_engine.reindex:
+  path: '/admin/config/search/elastic-appsearch/engine/{elastic_appsearch_engine}/reindex'
+  defaults:
+    _entity_form: 'elastic_appsearch_engine.reindex'
   requirements:
     _permission: 'access administration pages'
   options:
@@ -19,25 +43,16 @@ elastic_appsearch.engine.canonical:
       engine:
         with_config_overrides: TRUE
 
-entity.engine.schema:
-  path: '/admin/config/search/elastic_apsearch/engine/{engine}/schema'
-  options:
-    parameters:
-      engine:
-        tempstore: TRUE
-        type: 'entity:engine'
+entity.elastic_appsearch_engine.clear:
+  path: '/admin/config/search/elastic-appsearch/engine/{elastic_appsearch_engine}/clear'
   defaults:
-    _entity_form: 'engine.schema'
+    _entity_form: 'elastic_appsearch_engine.clear'
   requirements:
     _permission: 'access administration pages'
-
-elastic_appsearch.engine_schema:
-  path: '/elastic_appsearch/form/engine_schema'
-  defaults:
-    _form: '\Drupal\elastic_appsearch\Form\EngineSchema'
-    _title: 'EngineSchema'
-  requirements:
-    _access: 'TRUE'
+  options:
+    parameters:
+      elastic_appsearch_engine:
+        with_config_overrides: TRUE
 
 elastic_appsearch.engine_status_form:
   path: '/elastic_appsearch/form/engine_status'
@@ -46,3 +61,4 @@ elastic_appsearch.engine_status_form:
     _title: 'EngineStatusForm'
   requirements:
     _access: 'TRUE'
+

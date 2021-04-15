@@ -22,7 +22,7 @@ class ServerDeleteForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('entity.server.collection');
+    return new Url('entity.elastic_appsearch_server.collection');
   }
 
   /**

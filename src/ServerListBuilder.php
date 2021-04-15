@@ -75,7 +75,7 @@ class ServerListBuilder extends ConfigEntityListBuilder {
       && !$entity->isAvailable()) {
       $row['data']['status']['data'] = $this->t('Unavailable');
       $row['class'][] = 'color-error';
-    }
+  }
 
     return $row;
   }
@@ -85,6 +85,8 @@ class ServerListBuilder extends ConfigEntityListBuilder {
    */
   public function render() {
     $entity_groups = $this->loadGroups();
+
+    // print_r($entity_groups); exit;
     $list['#type'] = 'container';
     $list['#attached']['library'][] = 'search_api/drupal.search_api.admin_css';
 
@@ -121,22 +123,23 @@ class ServerListBuilder extends ConfigEntityListBuilder {
    *   - lone_indexes: All search indexes that aren't attached to any server.
    */
   public function loadGroups() {
-    $servers = \Drupal::entityTypeManager()->getStorage('server')->loadMultiple();
+    $servers = \Drupal::entityTypeManager()->getStorage('elastic_appsearch_server')->loadMultiple();
     /** @var \Drupal\search_api\ServerInterface[] $servers */
-    $engines = \Drupal::entityTypeManager()->getStorage('engine')->loadMultiple();
-
+    $engines = \Drupal::entityTypeManager()->getStorage('elastic_appsearch_engine')->loadMultiple();
+    // print_r($engines); exit;
     $server_groups = [];
-    foreach ($servers as $server) {
+    foreach ($servers as $server) {     
       $server_group = [
-        'server.' . $server->id() => $server,
+        'elastic_appsearch_server.' . $server->id() => $server,
       ];
 
       foreach ($server->getEngines() as $engine) {
-        $server_group['engine.' . $engine->id()] = $engine;
+        
+        $server_group['elastic_appsearch_engine.' . $engine->id()] = $engine;
         unset($engines[$engine->id()]);
       }
 
-      $server_groups['server.' . $server->id()] = $server_group;
+      $server_groups['elastic_appsearch_server.' . $server->id()] = $server_group;
     }
 
     return [

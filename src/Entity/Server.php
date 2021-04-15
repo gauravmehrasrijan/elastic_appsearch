@@ -8,7 +8,7 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
  * Defines the Server entity.
  *
  * @ConfigEntityType(
- *   id = "server",
+ *   id = "elastic_appsearch_server",
  *   label = @Translation("Appsearch Server"),
  *   handlers = {
  *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
@@ -22,7 +22,7 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
  *       "html" = "Drupal\elastic_appsearch\ServerHtmlRouteProvider",
  *     },
  *   },
- *   config_prefix = "server",
+ *   config_prefix = "elastic_appsearch_server",
  *   admin_permission = "administer site configuration",
  *   entity_keys = {
  *     "id" = "id",
@@ -30,11 +30,11 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
  *     "uuid" = "uuid"
  *   },
  *   links = {
- *     "canonical" = "/admin/config/search/elastic_appsearch/server/{server}",
- *     "add-form" = "/admin/config/search/elastic_appsearch/server/add",
- *     "edit-form" = "/admin/config/search/elastic_appsearch/server/{server}/edit",
- *     "delete-form" = "/admin/config/search/elastic_appsearch/server/{server}/delete",
- *     "collection" = "/admin/config/search/elastic_appsearch/server"
+ *     "canonical" = "/admin/config/search/elastic-appsearch/server/{elastic_appsearch_server}",
+ *     "add-form" = "/admin/config/search/elastic-appsearch/server/add",
+ *     "edit-form" = "/admin/config/search/elastic-appsearch/server/{elastic_appsearch_server}/edit",
+ *     "delete-form" = "/admin/config/search/elastic-appsearch/server/{elastic_appsearch_server}/delete",
+ *     "collection" = "/admin/config/search/elastic-appsearch/server"
  *   }
  * )
  */
@@ -121,22 +121,13 @@ class Server extends ConfigEntityBase implements ServerInterface {
   }
 
   public function getEngines(array $properties = []){
-    $storage = \Drupal::entityTypeManager()->getStorage('engine');
+    $storage = \Drupal::entityTypeManager()->getStorage('elastic_appsearch_engine');
     return $storage->loadByProperties(['server' => $this->id()] + $properties);
   }
 
   public function isAvailable(){
-    $client = \Drupal::service('elastic_appsearch.client')::connect(
-      $this->host,
-      $this->secret
-    );
-    $engine = $client->listEngines();
-
-    if( is_array($engine) ){
-      return TRUE;
-    }else{
-      return FALSE;
-    }
+    $engine = $this->getClient()->listEngines();
+    return is_array($engine);
   }
   
 }

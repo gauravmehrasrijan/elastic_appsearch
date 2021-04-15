@@ -28,4 +28,35 @@ class Database{
     return $collection;
     
   }
+
+  public static function filterNodeId($node_id){
+    return filter_var($node_id, FILTER_SANITIZE_NUMBER_INT);
+  }
+
+  public static function prepareNodeToIndex($nid, $_fields){
+    $response = [];
+    $node_id = static::filterNodeId($nid);
+    $node = \Drupal\node\Entity\Node::load($node_id);
+    $response['id'] = $node_id;
+    foreach ($node->getFields() as $name => $field) {
+      if(isset($_fields[$name])){
+        static::mapEntityReference($response, $field, $name);
+      }
+    }
+    return $response;
+  }
+
+  public static function mapEntityReference(&$response, $field, $name){
+    $field_type = $field->getFieldDefinition()->getType();
+    if(
+      $field_type == 'entity_reference'
+      && $field->getFieldDefinition()->getSetting('target_type') == 'taxonomy_term'
+    ){
+      foreach($field->referencedEntities() as $entity_reference){
+        $response[$name][] = $entity_reference->getName();
+      }
+    }else{
+      $response[$name] = $field->getString();
+    }
+  }
 }
