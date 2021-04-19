@@ -126,8 +126,18 @@ class Server extends ConfigEntityBase implements ServerInterface {
   }
 
   public function isAvailable(){
-    $engine = $this->getClient()->listEngines();
-    return is_array($engine);
+    $is_available = TRUE;
+    try{
+      $engine = $this->getClient()->listEngines();
+      return is_array($engine);
+    }
+    catch (\Exception $e){
+      $is_available = FALSE;
+      \Drupal::logger('elastic_appsearch')->notice('Unable to reach server - ' .$this->id() );
+    }
+
+    return $is_available;
+    
   }
   
 }

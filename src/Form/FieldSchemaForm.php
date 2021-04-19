@@ -71,30 +71,20 @@ class FieldSchemaForm extends EntityForm {
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
-   * @param \Drupal\search_api\DataType\DataTypePluginManager $data_type_plugin_manager
-   *   The data type plugin manager.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer to use.
-   * @param \Drupal\search_api\Utility\DataTypeHelperInterface $data_type_helper
-   *   The data type helper.
-   * @param \Drupal\search_api\Utility\FieldsHelperInterface $fields_helper
-   *   The fields helper.
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger.
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
-    DataTypePluginManager $data_type_plugin_manager,
     RendererInterface $renderer,
-    DataTypeHelperInterface $data_type_helper,
-    FieldsHelperInterface $fields_helper,
     MessengerInterface $messenger) {
     
     $this->entityTypeManager = $entity_type_manager;
-    $this->dataTypePluginManager = $data_type_plugin_manager;
+    
     $this->renderer = $renderer;
-    $this->dataTypeHelper = $data_type_helper;
-    $this->fieldsHelper = $fields_helper;
+    
     $this->messenger = $messenger;
   }
 
@@ -103,18 +93,12 @@ class FieldSchemaForm extends EntityForm {
    */
   public static function create(ContainerInterface $container) {
     $entity_type_manager = $container->get('entity_type.manager');
-    $data_type_plugin_manager = $container->get('plugin.manager.search_api.data_type');
     $renderer = $container->get('renderer');
-    $data_type_helper = $container->get('search_api.data_type_helper');
-    $fields_helper = $container->get('search_api.fields_helper');
     $messenger = $container->get('messenger');
 
     return new static(
       $entity_type_manager,
-      $data_type_plugin_manager,
       $renderer,
-      $data_type_helper,
-      $fields_helper,
       $messenger
     );
   }
@@ -199,7 +183,7 @@ class FieldSchemaForm extends EntityForm {
       ];
       $build['fields'][$key]['id'] = [
         '#type' => 'textfield',
-        '#default_value' => 'eas_'.$key,
+        '#default_value' => $key,
         '#attributes' => ['readonly' => 'readonly'],
         '#required' => TRUE,
         '#size' => 35,
@@ -258,7 +242,9 @@ class FieldSchemaForm extends EntityForm {
     
     if($status){
       $engine->setItemsTrackable();
-      $engine->getClient()->updateSchema($engine->id(),$this->formatSchema($field_values, true));
+      if($engine->getServerInstance()->isAvailable()){
+        $engine->getClient()->updateSchema($engine->id(),$this->formatSchema($field_values, true));
+      }
     }
 
     switch ($status) {
