@@ -112,7 +112,7 @@ class Engine extends ConfigEntityBase implements EngineInterface {
     return $this->datasources;
   }
 
-  protected function getServerInstance(){
+  public function getServerInstance(){
     return \Drupal::entityTypeManager()
       ->getStorage('elastic_appsearch_server')
       ->load($this->getServer());
