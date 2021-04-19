@@ -7,3 +7,58 @@ elastic_appsearch.appsearch_form:
     _permission: 'access administration pages'
   options:
     _admin_route: TRUE
+
+elastic_appsearch.elastic_appsearch_engine.canonical:
+  path: '/admin/config/search/elastic-appsearch/engine/{elastic_appsearch_engine}'
+  defaults:
+    _controller: '\Drupal\elastic_appsearch\Controller\EngineController::page'
+  requirements:
+    _permission: 'access administration pages'
+  options:
+    parameters:
+      elastic_appsearch_engine:
+        type: 'entity:elastic_appsearch_engine'
+        with_config_overrides: TRUE
+
+entity.elastic_appsearch_engine.schema:
+  path: '/admin/config/search/elastic-apsearch/engine/{elastic_appsearch_engine}/schema'
+  options:
+    parameters:
+      elastic_appsearch_engine:
+        tempstore: TRUE
+        type: 'entity:elastic_appsearch_engine'
+  defaults:
+    _entity_form: 'elastic_appsearch_engine.schema'
+  requirements:
+    _permission: 'access administration pages'
+
+entity.elastic_appsearch_engine.reindex:
+  path: '/admin/config/search/elastic-appsearch/engine/{elastic_appsearch_engine}/reindex'
+  defaults:
+    _entity_form: 'elastic_appsearch_engine.reindex'
+  requirements:
+    _permission: 'access administration pages'
+  options:
+    parameters:
+      engine:
+        with_config_overrides: TRUE
+
+entity.elastic_appsearch_engine.clear:
+  path: '/admin/config/search/elastic-appsearch/engine/{elastic_appsearch_engine}/clear'
+  defaults:
+    _entity_form: 'elastic_appsearch_engine.clear'
+  requirements:
+    _permission: 'access administration pages'
+  options:
+    parameters:
+      elastic_appsearch_engine:
+        with_config_overrides: TRUE
+
+elastic_appsearch.engine_status_form:
+  path: '/elastic_appsearch/form/engine_status'
+  defaults:
+    _form: '\Drupal\elastic_appsearch\Form\EngineStatusForm'
+    _title: 'EngineStatusForm'
+  requirements:
+    _access: 'TRUE'
+

@@ -8,6 +8,8 @@ use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\Core\Messenger\MessengerTrait;
 use GuzzleHttp\Exception\RequestException;
 use Elastic\AppSearch\Client\ClientBuilder;
+use Drupal\elastic_appsearch\Entity\ServerInterface;
+
 /**
  * Class AppSearchClient.
  */
@@ -28,7 +30,7 @@ class ElasticAppSearchClient implements ElasticAppsearchClientInterface {
    *
    * @var \GuzzleHttp\Client
    */
-  protected $client;
+  public $client;
 
   /**
    * Drupal\webprofiler\Config\ConfigFactoryWrapper definition.
@@ -41,22 +43,32 @@ class ElasticAppSearchClient implements ElasticAppsearchClientInterface {
    * Constructs a new AppSearchClient object.
    */
   public function __construct(ClientInterface $http_client, ConfigFactoryInterface $config) {
-    $this->httpClient = $http_client;    
-    $this->config = $config->get('elastic_appsearch.appsearch');
-    $this->server = $this->config->get('api_endpoint');
-    $this->apikey = $this->config->get('api_private_key');
-    $this->engineName = $this->config->get('engine_name');
-    
-    if(!empty($this->server)){
-      $this->connect($this->server, $this->apikey, $this->engineName);
-    }
 
   }
 
-  public static function connect($server, $apikey, $engine){
+  public function getInstance($server){
+
+    if(!empty($this->client)){
+      return $this->client;
+    }
+
+    $clientBuilder = ClientBuilder::create(
+      $server->getHost(),
+      $server->getSecret()
+    );
+
+    $this->client = $clientBuilder->build();
+
+    return $this->client;
+  }
+
+  public static function connect($server, $apikey, $engine = FALSE){
     $clientBuilder = ClientBuilder::create($server, $apikey );
     $client = $clientBuilder->build();
-    $engine = $client->getEngine($engine);
+    if($engine){
+      $engine = $client->getEngine($engine);
+    }
+    return $client;
   }
 
 

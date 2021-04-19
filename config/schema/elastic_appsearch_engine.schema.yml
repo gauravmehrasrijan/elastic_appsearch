@@ -1,0 +1,41 @@
+elastic_appsearch.elastic_appsearch_engine.*:
+  type: config_entity
+  label: 'Engine config'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    server:
+      type: string
+      label: 'Server ID'
+    label:
+      type: label
+      label: 'Label'
+    language:
+      type: string
+      label: 'Engine Langauge'
+    datasources:
+      type: sequence
+      label: 'Different content types to index on engine'
+    schema:
+      type: sequence
+      label: 'Indexed fields and schema'
+      orderby: key
+      sequence:
+        type: mapping
+        label: field
+        mapping:
+          label:
+            type: string
+            label: 'A label for the field'
+          field_id:
+            type: string
+            label: 'Machine name of the field.'
+          type:
+            type: string
+            label: 'The data type of the field'
+    status:
+      type: boolean
+      label: 'Engine status'
+    uuid:
+      type: string

@@ -6,6 +6,15 @@
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\elastic_appsearch\Entity\Server;
+use Drupal\Core\Render\Element;
+use Drupal\Core\Url ;
+
+/*
+ * Load all theme functions.
+ */
+require_once __DIR__ . '/elastic_appsearch.theme.inc';
+
 
 /**
  * Implements hook_help().
@@ -21,4 +30,27 @@ function elastic_appsearch_help($route_name, RouteMatchInterface $route_match) {
 
     default:
   }
+}
+
+
+/**
+ * Implements hook_theme().
+ */
+function elastic_appsearch_theme() {
+  return [
+    'elastic_appsearch_admin_fields_table' => [
+      'render element' => 'element',
+    ],
+    'engine' => [
+      'variables' => [
+        'engine' => NULL,
+        'server_count' => NULL,
+        'server_count_error' => NULL,
+        'index_process' => NULL,
+        'description' => NULL,
+        'table' => NULL,
+        'form' => NULL
+      ],
+    ]
+    ];
 }

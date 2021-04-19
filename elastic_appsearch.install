@@ -1,0 +1,47 @@
+<?php
+
+/**
+ * Implements hook_schema().
+ */
+function elastic_appsearch_schema() {
+  $schema['elastic_appsearch_item'] = [
+    'description' => 'Stores the items which should be indexed for each index, and their state.',
+    'fields' => [
+      'engine_id' => [
+        'description' => 'The ID of the engine this item belongs to',
+        'type' => 'varchar',
+        'length' => 50,
+        'not null' => TRUE,
+      ],
+      'datasource' => [
+        'description' => 'The content type of the datasource this item belongs to',
+        'type' => 'varchar',
+        'length' => 50,
+        'not null' => TRUE,
+      ],
+      'item_id' => [
+        'description' => 'The unique identifier of this item',
+        'type' => 'varchar',
+        'length' => 150,
+        'not null' => TRUE,
+      ],
+      'changed' => [
+        'description' => 'A timestamp indicating when the item was last changed',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'status' => [
+        'description' => 'Boolean indicating the reindexation status, "1" when we need to reindex, "0" otherwise',
+        'type' => 'int',
+        'not null' => TRUE,
+      ],
+    ],
+    'indexes' => [
+      'indexing' => ['engine_id', 'status', 'changed', 'item_id'],
+    ],
+    'primary key' => ['engine_id', 'item_id'],
+  ];
+
+  return $schema;
+}

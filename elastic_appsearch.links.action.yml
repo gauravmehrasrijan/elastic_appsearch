@@ -1,0 +1,12 @@
+entity.elastic_appsearch_server.add_form:
+  route_name: entity.elastic_appsearch_server.add_form
+  title: 'Add Server'
+  appears_on:
+    - entity.elastic_appsearch_server.collection
+    - entity.elastic_appsearch_engine.collection
+entity.engine.add_form:
+  route_name: entity.elastic_appsearch_engine.add_form
+  title: 'Add Engine'
+  appears_on:
+    - entity.elastic_appsearch_engine.collection
+    - entity.elastic_appsearch_server.collection

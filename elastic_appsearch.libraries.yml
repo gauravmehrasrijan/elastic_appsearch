@@ -1,0 +1,4 @@
+elastic_appsearch-library:
+  
+  dependencies:
+    - core/drupal.ajax
