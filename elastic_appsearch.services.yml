@@ -5,9 +5,9 @@ services:
   elastic_appsearch.client:
     class: Drupal\elastic_appsearch\ElasticAppSearchClient
     arguments: ['@http_client', '@config.factory']
-  logger.channel.elastic_appsearch:
-    parent: logger.channel_base
-    arguments: ['elastic_appsearch']
   elastic_appsearch.tracker:
     class: Drupal\elastic_appsearch\Tracker\Tracker
+    arguments: []
+  elastic_appsearch.entity.tracking_manager:
+    class: Drupal\elastic_appsearch\Tracker\TrackingManager
     arguments: []

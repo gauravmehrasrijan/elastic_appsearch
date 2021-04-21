@@ -96,7 +96,12 @@ class Engine extends ConfigEntityBase implements EngineInterface {
    */
   protected $status;
 
-  public $client;
+  /**
+   * Elastic appsearch client.
+   *
+   * @var Drupal\elastic_appsearch\ElasticSearchInterface
+   */
+  protected $client;
 
   protected $trackerInstance;
 
@@ -176,6 +181,10 @@ class Engine extends ConfigEntityBase implements EngineInterface {
 
   public function info(){
     $elasticlient = $this->getClient();
+
+    if(!$elasticlient){
+      return;
+    }
     $engine = $elasticlient->getEngine($this->id());
 
     if($engine){
@@ -213,11 +222,16 @@ class Engine extends ConfigEntityBase implements EngineInterface {
 
   public function setItemsTrackable(){
     $nodes = Database::getNodes($this->datasources());
+    $this->getTrackerInstance()->trackAllItemsDeleted();
     $this->getTrackerInstance()->trackItemsInserted($nodes);
   }
 
   public function indexDocuments($documents){
     return $this->getClient()->indexDocuments($this->id(), $documents);
+  }
+
+  public function deleteDocuments($documents){
+    return $this->getClient()->deleteDocuments($this->id(), $documents);
   }
 
   public function performTasks($tasks){

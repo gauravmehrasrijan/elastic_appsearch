@@ -59,4 +59,24 @@ class Database{
       $response[$name] = $field->getString();
     }
   }
+
+  public function getNodesByTaxonomyTermIds($termIds){
+    $termIds = (array) $termIds;
+    if(empty($termIds)){
+      return NULL;
+    }
+  
+    $query = \Drupal::database()->select('taxonomy_index', 'ti');
+    $query->fields('ti', array('nid'));
+    $query->condition('ti.tid', $termIds, 'IN');
+    $query->distinct(TRUE);
+    $result = $query->execute();
+  
+    if($nodeIds = $result->fetchCol()){
+      return Node::loadMultiple($nodeIds);
+    }
+  
+    return NULL;
+  }
+  
 }
