@@ -83,7 +83,7 @@ class Server extends ConfigEntityBase implements ServerInterface {
    */
   protected $status;
 
-  public $client;
+  protected $client;
 
   public function getDescription(){
     return $this->description;

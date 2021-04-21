@@ -101,7 +101,7 @@ class Engine extends ConfigEntityBase implements EngineInterface {
    *
    * @var Drupal\elastic_appsearch\ElasticSearchInterface
    */
-  public $client;
+  protected $client;
 
   protected $trackerInstance;
 
