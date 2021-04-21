@@ -34,9 +34,11 @@ class Tracker {
 
   protected $engine;
 
-  public function getInstance($engine){
+  public function getInstance($engine = NULL){
 
-    $this->engine = $engine;
+    if($engine){
+      $this->engine = $engine;
+    }
 
     return $this;
   }
@@ -142,7 +144,7 @@ class Tracker {
   /**
    * {@inheritdoc}
    */
-  public function trackItemsInserted(array $ids) {
+  public function trackItemsInserted(array $ids, $status=NULL) {
     $transaction = $this->getDatabaseConnection()->startTransaction();
     try {
       $engine_id = $this->engine->id();
@@ -169,7 +171,7 @@ class Tracker {
             'datasource' => $datasource_id,
             'item_id' => $item_id,
             'changed' => $this->getTimeService()->getRequestTime(),
-            'status' => $this::STATUS_NOT_INDEXED,
+            'status' => ($status) ? $status : $this::STATUS_NOT_INDEXED,
           ]);
         }
         if ($insert->count()) {
@@ -365,6 +367,51 @@ class Tracker {
     }
     catch (\Exception $e) {
       $this->logException($e);
+      return 0;
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onEntityDelete($entity_id) {
+    $transaction = $this->getDatabaseConnection()->startTransaction();
+    try {
+      $this->getDatabaseConnection()
+        ->delete('elastic_appsearch_item')
+        ->condition('item_id', $entity_id)
+        ->execute();
+    }
+    catch (\Exception $e) {
+      $this->logException($e);
+      $transaction->rollBack();
+      return 0;
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function entityInsert($item_id, $engine_id) {
+    $transaction = $this->getDatabaseConnection()->startTransaction();
+    try {
+      $insert = $this->createInsertStatement();
+      list($datasource_id) = Common::splitCombinedId($item_id);
+      $insert->values([
+        'engine_id' => $engine_id,
+        'datasource' => $datasource_id,
+        'item_id' => $item_id,
+        'changed' => $this->getTimeService()->getRequestTime(),
+        'status' => $this::STATUS_INDEXED,
+      ]);
+    
+      if ($insert->count()) {
+        $insert->execute();
+      }
+    }
+    catch (\Exception $e) {
+      $this->logException($e);
+      $transaction->rollBack();
       return 0;
     }
   }

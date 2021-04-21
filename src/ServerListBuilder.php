@@ -71,10 +71,11 @@ class ServerListBuilder extends ConfigEntityListBuilder {
     }
 
     if ($status
-        && $entity instanceof ServerInterface
-      && !$entity->isAvailable()) {
-      $row['data']['status']['data'] = $this->t('Unavailable');
-      $row['class'][] = 'color-error';
+      && $entity instanceof ServerInterface
+      && !$entity->isAvailable()
+    ) {
+    $row['data']['status']['data'] = $this->t('Unavailable');
+    $row['class'][] = 'color-error';
   }
 
     return $row;
@@ -86,7 +87,6 @@ class ServerListBuilder extends ConfigEntityListBuilder {
   public function render() {
     $entity_groups = $this->loadGroups();
 
-    // print_r($entity_groups); exit;
     $list['#type'] = 'container';
     $list['#attached']['library'][] = 'search_api/drupal.search_api.admin_css';
 
@@ -126,7 +126,7 @@ class ServerListBuilder extends ConfigEntityListBuilder {
     $servers = \Drupal::entityTypeManager()->getStorage('elastic_appsearch_server')->loadMultiple();
     /** @var \Drupal\search_api\ServerInterface[] $servers */
     $engines = \Drupal::entityTypeManager()->getStorage('elastic_appsearch_engine')->loadMultiple();
-    // print_r($engines); exit;
+    
     $server_groups = [];
     foreach ($servers as $server) {     
       $server_group = [
@@ -134,7 +134,6 @@ class ServerListBuilder extends ConfigEntityListBuilder {
       ];
 
       foreach ($server->getEngines() as $engine) {
-        
         $server_group['elastic_appsearch_engine.' . $engine->id()] = $engine;
         unset($engines[$engine->id()]);
       }

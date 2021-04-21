@@ -19,7 +19,6 @@ class ServerForm extends EntityForm {
     $api_endpoint_helptext = 'You can find the API endpoint URL in the credentials sections of the App Search';
 
     $server = $this->entity;
-    // print_r($server->getDescription()); exit;
     $form['label'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Label'),

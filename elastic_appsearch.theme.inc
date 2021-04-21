@@ -4,6 +4,8 @@ use Drupal\elastic_appsearch\Entity\Server;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Url ;
 use Drupal\elastic_appsearch\Utility\Common;
+use Drupal\Core\Link;
+
 /**
  * Prepares variables for elastic_appsearch_admin_fields_table form templates.
  *
@@ -58,8 +60,8 @@ function template_preprocess_elastic_appsearch_admin_fields_table(array &$variab
  *   - index: The search index to display.
  */
 function template_preprocess_engine(array &$variables) {
-  // kint($variables); exit;
   $engine = $variables['engine'];
+  $engine_info = $engine->info();
   $tracker = $engine->getTrackerInstance();
   $indexed_count = $tracker->getIndexedItemsCount();
   $total_count = $tracker->getTotalItemsCount();
@@ -80,6 +82,10 @@ function template_preprocess_engine(array &$variables) {
   $info = &$row['data'][1];
   $classes = &$row['class'];
 
+  $label = t('Engine');
+  $info =  Link::fromTextAndUrl($engine->id(), $engine->toUrl('edit-form'));
+  $rows[] = Common::deepCopy($row);
+
   $label = "Status";
   $info = $engine->status() ? "Enabled" : "Disabled";
   $rows[] = Common::deepCopy($row);
@@ -88,19 +94,31 @@ function template_preprocess_engine(array &$variables) {
   $info = $total_count;
   $rows[] = Common::deepCopy($row);
 
-  $label = "Indexed Documents";
-  $info = $indexed_count;
+  $label = "Documents Processed";
+  $info = ($indexed_count)? $indexed_count : $engine_info['document_count'];
   $rows[] = Common::deepCopy($row);
+
+  $label = "Documents Index";
+  $info = $engine_info['document_count'];
+  $rows[] = Common::deepCopy($row);
+
+  $failed = ($total_count - $engine_info['document_count']);
+  if($failed){
+    $label = "Failure Count";
+    $info = $failed;
+    $rows[] = Common::deepCopy($row);
+  }
+
   
   $label = t('Server');
-  $info = $engine->getServer();
+  $info =  Link::fromTextAndUrl($engine->getServer(), $engine->getServerInstance()->toUrl('canonical'));
   $rows[] = Common::deepCopy($row);
 
   // Add the indexing progr ess bar.
   $variables['index_progress'] = [
     '#theme' => 'progress_bar',
-    '#percent' => $total_count ? (int) (100 * $indexed_count / $total_count) : 100,
-    '#message' => t('@indexed/@total indexed', ['@indexed' => $indexed_count, '@total' => $total_count]),
+    '#percent' => $total_count ? (int) (100 * $engine_info['document_count']/ $total_count) : 100,
+    '#message' => t('@indexed/@total indexed', ['@indexed' => $engine_info['document_count'], '@total' => $total_count]),
   ];
 
   // Append the index info table to the output.

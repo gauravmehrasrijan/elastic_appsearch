@@ -23,7 +23,9 @@ class EngineForm extends EntityForm {
       '#title' => $this->t('Label'),
       '#maxlength' => 255,
       '#default_value' => $engine->label(),
-      '#description' => $this->t("Engine names can only contain lowercase letters, numbers, and hyphens"),
+      '#pattern' => '^[a-z\d]+$',
+      '#pattern_error' => 'Special charcters not allowed',
+      '#description' => $this->t("Lowercase letters, numbers with no special charcters and spaces"),
       '#required' => TRUE,
     ];
     $form['label']['#attributes']['autocomplete'] = 'off';
@@ -130,6 +132,10 @@ class EngineForm extends EntityForm {
     $engine = $this->entity;
     $status = $engine->save();
 
+    if($status){
+      $engine->setItemsTrackable();
+    }
+
     switch ($status) {
       case SAVED_NEW:
         $this->messenger()->addMessage($this->t('Created the %label Engine.', [
@@ -142,7 +148,7 @@ class EngineForm extends EntityForm {
           '%label' => $engine->label(),
         ]));
     }
-    $form_state->setRedirectUrl($engine->toUrl('collection'));
+    $form_state->setRedirectUrl($engine->toUrl('canonical'));
   }
 
 }
