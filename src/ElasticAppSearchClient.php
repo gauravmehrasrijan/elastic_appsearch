@@ -48,8 +48,8 @@ class ElasticAppSearchClient implements ElasticAppsearchClientInterface {
 
   public function getInstance($server){
 
-    if(!empty($this->client)){
-      return $this->client;
+    if(!empty($this->client[$server->id()])){
+      return $this->client[$server->id()];
     }
 
     $clientBuilder = ClientBuilder::create(
@@ -57,9 +57,9 @@ class ElasticAppSearchClient implements ElasticAppsearchClientInterface {
       $server->getSecret()
     );
 
-    $this->client = $clientBuilder->build();
+    $this->client[$server->id()] = $clientBuilder->build();
 
-    return $this->client;
+    return $this->client[$server->id()];
   }
 
   public static function connect($server, $apikey, $engine = FALSE){

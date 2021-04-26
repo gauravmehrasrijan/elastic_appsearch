@@ -23,7 +23,7 @@ use Drupal\elastic_appsearch\Utility\BatchHelper;
  *       "delete" = "Drupal\elastic_appsearch\Form\EngineDeleteForm",
  *       "schema" = "Drupal\elastic_appsearch\Form\FieldSchemaForm",
  *       "reindex" = "Drupal\elastic_appsearch\Form\EngineReindexConfirmForm",
- *       "clear" = "Drupal\elastic_appsearch\Form\EngineClearIndexConfirmForm"
+ *       "clear" = "Drupal\elastic_appsearch\Form\EngineClearIndexConfirmForm",
  *     },
  *     "route_provider" = {
  *       "html" = "Drupal\elastic_appsearch\EngineHtmlRouteProvider",
@@ -38,6 +38,7 @@ use Drupal\elastic_appsearch\Utility\BatchHelper;
  *   },
  *   links = {
  *     "canonical" = "/admin/config/search/elastic-appsearch/engine/{elastic_appsearch_engine}",
+ *     "sync" = "/admin/config/search/elastic-appsearch/engine/{elastic_appsearch_engine}/sync",
  *     "add-form" = "/admin/config/search/elastic-appsearch/engine/add",
  *     "edit-form" = "/admin/config/search/elastic-appsearch/engine/{elastic_appsearch_engine}/edit",
  *     "delete-form" = "/admin/config/search/elastic-appsearch/engine/{elastic_appsearch_engine}/delete",
@@ -194,7 +195,11 @@ class Engine extends ConfigEntityBase implements EngineInterface {
 
   public function preSave(EntityStorageInterface $storage){
     if($this->isNew()){
-      $this->getClient()->createEngine($this->id(), $this->getLanguage());
+      try{
+        $this->getClient()->createEngine($this->id(), $this->getLanguage());
+      }catch(\Exception $e){
+        \Drupal::logger('elastic_appsearch')->notice('Engine already exists on remote server - ' .$this->id() );
+      }
     }
   }
 
@@ -202,9 +207,13 @@ class Engine extends ConfigEntityBase implements EngineInterface {
    * {@inheritdoc}
    */
   public function delete() {
+    parent::delete();
     if($this->getClient()){
-      $this->getClient()->deleteEngine($this->id());
-      parent::delete();
+      try{
+        $this->getClient()->deleteEngine($this->id());
+      }catch(\Exception $e){
+        \Drupal::logger('elastic_appsearch')->notice('Unable to delete engine - ' .$this->id() );
+      }
     }
   }
 

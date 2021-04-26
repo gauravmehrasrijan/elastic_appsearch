@@ -5,6 +5,7 @@ use Drupal\Core\Render\Element;
 use Drupal\Core\Url ;
 use Drupal\elastic_appsearch\Utility\Common;
 use Drupal\Core\Link;
+use Drupal\Component\Serialization\Json;
 
 /**
  * Prepares variables for elastic_appsearch_admin_fields_table form templates.
@@ -61,6 +62,10 @@ function template_preprocess_elastic_appsearch_admin_fields_table(array &$variab
  */
 function template_preprocess_engine(array &$variables) {
   $engine = $variables['engine'];
+
+  if(!$engine->getServerInstance()->isAvailable()){
+    return;
+  }
   $engine_info = $engine->info();
   $tracker = $engine->getTrackerInstance();
   $indexed_count = $tracker->getIndexedItemsCount();
@@ -132,4 +137,74 @@ function template_preprocess_engine(array &$variables) {
     ],
   ];
 
+}
+
+/**
+ * Prepares variables for search_api_index templates.
+ *
+ * Default template: search-api-index.html.twig.
+ *
+ * @param array &$variables
+ *   An associative array containing:
+ *   - index: The search index to display.
+ */
+function template_preprocess_server(array &$variables) {
+  $server = $variables['server'];
+  $engines_in_sync = $server->getEngines();
+  $engines = $server->getClient()->listEngines();
+
+  $headers = array('Engine ID', 'Type', 'Document Count', 'Is Sync', 'Datasources','Operations');
+  $rows = array();
+  
+  foreach($engines['results'] as $engine){
+    $is_sync = isset($engines_in_sync[$engine['name']]);
+    $rows[] = [
+      'name' => ($is_sync) ? 
+        Link::fromTextAndUrl( $engine['name'], $engines_in_sync[$engine['name']]->toUrl('canonical')) : 
+        $engine['name'],
+      'type' => $engine['type'],
+      'count' => $engine['document_count'],
+      'is_sync' => ($is_sync) ? 'Yes' : 'No',
+      'datasources' => ($is_sync) ? implode(', ', $engines_in_sync[$engine['name']]->datasources()) : '',
+      'op' => (!$is_sync) ?
+      Link::fromTextAndUrl('Sync Now', 
+        Url::fromRoute( 'entity.elastic_appsearch_engine.sync',['elastic_appsearch_engine'=>$engine['name']])
+      ) : 
+      buildAjaxUrl($engine),
+    ];
+  }
+  $variables['table'] = [
+    '#theme' => 'table',
+    '#header' => $headers,
+    '#rows' => $rows,
+    '#empty' => t('No Engine found on the server'),
+    '#attached' => ['library' => ['core/drupal.dialog.ajax']]
+  ];
+
+  // return theme('table', array('header' => $headers, 'rows' => $rows));
+}
+
+function buildAjaxUrl($engine){
+  $link_options = array(
+    'attributes' => array(
+      'class' => array(
+        'use-ajax',
+        'button',
+        'button-action',
+        'bg-green',
+        'button--primary',
+        'button--small',
+      ),
+      'data-dialog-type' => 'modal',
+      'data-dialog-options' => Json::encode([
+        'width' => 700,
+      ])
+    )
+  );
+  $url = Url::fromRoute(
+    'elastic_appsearch.elastic_appsearch_server.engine_schema',
+    ['elastic_appsearch_engine'=>$engine['name']]
+  );
+  $url->setOptions($link_options);
+  return Link::fromTextAndUrl('Click here', $url)->toString();
 }

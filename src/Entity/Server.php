@@ -111,13 +111,13 @@ class Server extends ConfigEntityBase implements ServerInterface {
   }
 
   public function getClient(){
-    if(!empty($this->client)){
-      return $this->client;
+    if(!empty($this->client[$this->id()])){
+      return $this->client[$this->id()];
     }
 
-    $this->client = \Drupal::service('elastic_appsearch.client')
+    $this->client[$this->id()] = \Drupal::service('elastic_appsearch.client')
       ->getInstance($this);
-    return $this->client;
+    return $this->client[$this->id()];
   }
 
   public function getEngines(array $properties = []){
@@ -128,8 +128,11 @@ class Server extends ConfigEntityBase implements ServerInterface {
   public function isAvailable(){
     $is_available = TRUE;
     try{
-      $engine = $this->getClient()->listEngines();
-      return is_array($engine);
+      $instance = $this->getClient();
+      if(!empty($instance)){
+        $engine = $instance->listEngines();
+        return is_array($engine);
+      }
     }
     catch (\Exception $e){
       $is_available = FALSE;

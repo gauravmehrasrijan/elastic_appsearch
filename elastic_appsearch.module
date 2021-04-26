@@ -54,8 +54,18 @@ function elastic_appsearch_theme() {
         'table' => NULL,
         'form' => NULL
       ],
+    ],
+    'server' => [
+      'variables' => [
+        'data' => NULL,
+        'server' => NULL,
+        'engines' => NULL,
+        'description' => NULL,
+        'table' => NULL,
+        'form' => NULL
+      ],
     ]
-    ];
+  ];
 }
 
 /**

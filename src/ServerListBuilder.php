@@ -85,6 +85,7 @@ class ServerListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function render() {
+
     $entity_groups = $this->loadGroups();
 
     $list['#type'] = 'container';

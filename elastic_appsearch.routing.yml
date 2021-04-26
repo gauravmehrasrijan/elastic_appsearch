@@ -62,3 +62,37 @@ elastic_appsearch.engine_status_form:
   requirements:
     _access: 'TRUE'
 
+elastic_appsearch.elastic_appsearch_server.canonical:
+  path: '/admin/config/search/elastic-appsearch/server/{elastic_appsearch_server}'
+  defaults:
+    _controller: '\Drupal\elastic_appsearch\Controller\ServerController::page'
+  requirements:
+    _permission: 'access administration pages'
+  options:
+    parameters:
+      elastic_appsearch_engine:
+        type: 'entity:elastic_appsearch_server'
+        with_config_overrides: TRUE
+
+elastic_appsearch.elastic_appsearch_server.engine_schema:
+  path: '/admin/config/search/elastic-appsearch/server/{elastic_appsearch_engine}/schema'
+  defaults:
+    _controller: '\Drupal\elastic_appsearch\Controller\ServerController::schema'
+  requirements:
+    _permission: 'access administration pages'
+  options:
+    parameters:
+      elastic_appsearch_engine:
+        with_config_overrides: TRUE
+
+entity.elastic_appsearch_engine.sync:
+  path: '/admin/config/search/elastic-appsearch/engine/{elastic_appsearch_engine}/sync'
+  defaults:
+    _form: '\Drupal\elastic_appsearch\Form\SyncEngineConfirmForm'
+    _title: 'Sync Engine Confirmation'
+  requirements:
+    _permission: 'access administration pages'
+  options:
+    parameters:
+      elastic_appsearch_engine:
+        with_config_overrides: TRUE
