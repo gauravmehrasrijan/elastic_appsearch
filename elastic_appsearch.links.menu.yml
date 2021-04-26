@@ -11,3 +11,11 @@ elastic_appsearch.overview:
   route_name: entity.elastic_appsearch_server.collection
   parent: system.admin_config_search
 
+
+# Reference ui menu items definition
+entity.elastic_appsearch_referenceui.collection:
+  title: 'Reference ui'
+  route_name: entity.elastic_appsearch_referenceui.collection
+  description: 'List Reference ui (bundles)'
+  parent: system.admin_config_search
+  weight: 99

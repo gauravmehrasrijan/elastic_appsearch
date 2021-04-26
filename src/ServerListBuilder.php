@@ -12,7 +12,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Url;
 use Drupal\node\Entity\NodeType;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-
+use Drupal\elastic_appsearch\Entity\EngineInterface;
 
 /**
  * Provides a listing of Server entities.
@@ -164,5 +164,46 @@ class ServerListBuilder extends ConfigEntityListBuilder {
         return $a->status() ? -1 : 1;
       }
     });
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDefaultOperations(EntityInterface $entity) {
+    $operations = parent::getDefaultOperations($entity);
+
+    if ($entity instanceof ServerInterface) {
+      $route_parameters['elastic_appsearch_server'] = $entity->id();
+      $operations['view'] = [
+        'title' => $this->t('View'),
+        'weight' => 20,
+        'url' => new Url('elastic_appsearch.elastic_appsearch_server.canonical', $route_parameters),
+      ];
+    }
+
+    if ($entity instanceof EngineInterface) {
+      $route_parameters['elastic_appsearch_engine'] = $entity->id();
+      $operations['view'] = [
+        'title' => $this->t('View'),
+        'weight' => 20,
+        'url' => new Url('elastic_appsearch.elastic_appsearch_engine.canonical', $route_parameters),
+      ];
+
+      $operations['schema'] = [
+        'title' => $this->t('Field Schema'),
+        'weight' => 21,
+        'url' => new Url(
+          'entity.elastic_appsearch_engine.schema', $route_parameters ),
+      ];
+
+      $operations['referenceui'] = [
+        'title' => $this->t('Reference UI'),
+        'weight' => 21,
+        'url' => new Url(
+          'entity.elastic_appsearch_referenceui.collection', $route_parameters ),
+      ];
+    }
+
+    return $operations;
   }
 }
