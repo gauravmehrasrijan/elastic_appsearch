@@ -74,9 +74,9 @@ class ServerListBuilder extends ConfigEntityListBuilder {
       && $entity instanceof ServerInterface
       && !$entity->isAvailable()
     ) {
-    $row['data']['status']['data'] = $this->t('Unavailable');
-    $row['class'][] = 'color-error';
-  }
+      $row['data']['status']['data'] = $this->t('Unavailable');
+      $row['class'][] = 'color-error';
+    }
 
     return $row;
   }
@@ -127,9 +127,9 @@ class ServerListBuilder extends ConfigEntityListBuilder {
     $servers = \Drupal::entityTypeManager()->getStorage('elastic_appsearch_server')->loadMultiple();
     /** @var \Drupal\search_api\ServerInterface[] $servers */
     $engines = \Drupal::entityTypeManager()->getStorage('elastic_appsearch_engine')->loadMultiple();
-    
+
     $server_groups = [];
-    foreach ($servers as $server) {     
+    foreach ($servers as $server) {
       $server_group = [
         'elastic_appsearch_server.' . $server->id() => $server,
       ];
@@ -193,17 +193,18 @@ class ServerListBuilder extends ConfigEntityListBuilder {
         'title' => $this->t('Field Schema'),
         'weight' => 21,
         'url' => new Url(
-          'entity.elastic_appsearch_engine.schema', $route_parameters ),
+          'entity.elastic_appsearch_engine.schema', $route_parameters),
       ];
 
       $operations['referenceui'] = [
-        'title' => $this->t('Reference UI'),
+        'title' => $this->t('Search UI'),
         'weight' => 21,
         'url' => new Url(
-          'entity.elastic_appsearch_referenceui.collection', $route_parameters ),
+          'entity.elastic_appsearch_referenceui.collection', $route_parameters),
       ];
     }
 
     return $operations;
   }
+
 }

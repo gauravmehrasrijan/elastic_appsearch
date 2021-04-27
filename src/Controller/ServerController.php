@@ -8,6 +8,7 @@ use GuzzleHttp\ClientInterface;
 use Drupal\Core\Database\Driver\mysql\Connection;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Drupal\elastic_appsearch\Entity\ServerInterface;
+use Drupal\Component\Render\FormattableMarkup;
 
 /**
  * Class EngineController.
@@ -35,7 +36,6 @@ class ServerController extends ControllerBase {
    */
   protected $queue;
 
-
   /**
    * Constructs a new EngineController object.
    */
@@ -59,20 +59,20 @@ class ServerController extends ControllerBase {
   /**
    * Returns the page title for an engine's "View" tab.
    *
-   * @param \Drupal\search_api\EngineInterface $engine
+   * @param \Drupal\elastic_appsearch\ServerInterface $elastic_appsearch_server
    *   The index that is displayed.
    *
    * @return string
    *   The page title.
    */
-  public function pageTitle(EngineInterface $server) {
-    return new FormattableMarkup('@title', ['@title' => $server->label()]);
+  public function pageTitle(ServerInterface $elastic_appsearch_server) {
+    return new FormattableMarkup('@title', ['@title' => $elastic_appsearch_server->label()]);
   }
 
   /**
    * Displays information about a engine.
    *
-   * @param \Drupal\search_api\IndexInterface $search_api_index
+   * @param \Drupal\elastic_appsearch\ServerInterface $elastic_appsearch_server
    *   The index to display.
    *
    * @return array
@@ -90,9 +90,11 @@ class ServerController extends ControllerBase {
     return $render;
   }
 
-  public function schema($elastic_appsearch_engine){
+  /**
+   * {@inheritdoc}
+   */
+  public function schema($elastic_appsearch_engine) {
 
-    
     return [
       'view' => [
         '#theme' => 'table',
@@ -100,4 +102,5 @@ class ServerController extends ControllerBase {
       ],
     ];
   }
+
 }

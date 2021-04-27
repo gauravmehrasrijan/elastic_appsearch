@@ -1,6 +1,13 @@
 <?php
 
 /**
+ * @file
+ * elastic_appsearch.install
+ *
+ * Install elastic_appsearch schema to track engine indexes.
+ */
+
+/**
  * Implements hook_schema().
  */
 function elastic_appsearch_schema() {

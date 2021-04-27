@@ -7,7 +7,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 
 /**
- * Builds the form to delete Reference ui entities.
+ * Builds the form to delete Search ui entities.
  */
 class ReferenceUIDeleteForm extends EntityConfirmFormBase {
 

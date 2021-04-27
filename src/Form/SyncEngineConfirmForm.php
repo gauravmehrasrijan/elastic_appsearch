@@ -13,7 +13,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Defines a confirm form for reindexing an index.
  */
-class SyncEngineConfirmForm  extends ConfirmFormBase {
+class SyncEngineConfirmForm extends ConfirmFormBase {
 
   /**
    * The messenger.
@@ -66,7 +66,7 @@ class SyncEngineConfirmForm  extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    // return new Url('entity.elastic_appsearch_engine.canonical', ['elastic_appsearch_engine' => $this->entity->id()]);
+    // Return new Url('entity.elastic_appsearch_engine.canonical', ['elastic_appsearch_engine' => $this->entity->id()]);
   }
 
   /**
@@ -88,7 +88,7 @@ class SyncEngineConfirmForm  extends ConfirmFormBase {
       $engine->performTasks(['clear']);
     }
     catch (SearchApiException $e) {
-      //echo $e->getMessage(); exit;
+      // Echo $e->getMessage(); exit;.
     }
 
     $form_state->setRedirect('entity.elastic_appsearch_engine.canonical', ['elastic_appsearch_engine' => $engine->id()]);

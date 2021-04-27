@@ -8,10 +8,19 @@ elastic_appsearch.appsearch_form:
   options:
     _admin_route: TRUE
 
+elastic_appsearch.overview:
+  path: '/admin/config/search/elastic-appsearch'
+  defaults:
+    _title: 'Elastic AppSearch'
+    _entity_list: 'elastic_appsearch_server'
+  requirements:
+    _permission: 'access administration pages'
+
 elastic_appsearch.elastic_appsearch_engine.canonical:
   path: '/admin/config/search/elastic-appsearch/engine/{elastic_appsearch_engine}'
   defaults:
     _controller: '\Drupal\elastic_appsearch\Controller\EngineController::page'
+    _title_callback: '\Drupal\elastic_appsearch\Controller\EngineController::pageTitle'
   requirements:
     _permission: 'access administration pages'
   options:
@@ -66,6 +75,7 @@ elastic_appsearch.elastic_appsearch_server.canonical:
   path: '/admin/config/search/elastic-appsearch/server/{elastic_appsearch_server}'
   defaults:
     _controller: '\Drupal\elastic_appsearch\Controller\ServerController::page'
+    _title_callback: '\Drupal\elastic_appsearch\Controller\ServerController::pageTitle'
   requirements:
     _permission: 'access administration pages'
   options:

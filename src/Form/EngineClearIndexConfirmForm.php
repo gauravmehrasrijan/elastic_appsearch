@@ -13,7 +13,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Defines a confirm form for reindexing an index.
  */
-class EngineClearIndexConfirmForm  extends EntityConfirmFormBase {
+class EngineClearIndexConfirmForm extends EntityConfirmFormBase {
 
   /**
    * The messenger.
@@ -73,7 +73,7 @@ class EngineClearIndexConfirmForm  extends EntityConfirmFormBase {
       $engine->performTasks(['clear']);
     }
     catch (SearchApiException $e) {
-      //echo $e->getMessage(); exit;
+      // Echo $e->getMessage(); exit;.
     }
 
     $form_state->setRedirect('entity.elastic_appsearch_engine.canonical', ['elastic_appsearch_engine' => $engine->id()]);

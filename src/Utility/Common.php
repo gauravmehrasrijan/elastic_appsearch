@@ -10,7 +10,7 @@ use Drupal\Core\Config\Entity\ConfigEntityTypeInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Render\Markup;
 
-define('DATASOURCE_ID_SEPARATOR','/');
+define('DATASOURCE_ID_SEPARATOR', '/');
 
 /**
  * Contains utility methods for the Search API.
@@ -52,45 +52,16 @@ class Common {
   }
 
   /**
-   * Creates a combined ID from a raw ID and an optional datasource prefix.
-   *
-   * This can be used to created an internal item ID from a datasource ID and a
-   * datasource-specific raw item ID, or a combined property path from a
-   * datasource ID and a property path to identify properties index-wide.
-   *
-   * @param string|null $datasource_id
-   *   The ID of the datasource to which the item belongs. Or NULL to return the
-   *   raw ID unchanged (option included for compatibility purposes).
-   * @param string $raw_id
-   *   The datasource-specific raw item ID of the item (or property).
-   *
-   * @return string
-   *   The combined ID, with the datasource prefix separated by
-   *   \Drupal\search_api\IndexInterface::DATASOURCE_ID_SEPARATOR.
+   * {@inheritdoc}
    */
   public static function createCombinedId($node) {
-    
+
     return $node->type . DATASOURCE_ID_SEPARATOR . $node->nid . ':' . $node->langcode;
 
   }
 
   /**
-   * Splits an internal ID into its two parts.
-   *
-   * Both internal item IDs and combined property paths are prefixed with the
-   * corresponding datasource ID. This method will split these IDs up again into
-   * their two parts.
-   *
-   * @param string $combined_id
-   *   The internal ID, with an optional datasource prefix separated with
-   *   \Drupal\search_api\IndexInterface::DATASOURCE_ID_SEPARATOR from the
-   *   raw item ID or property path.
-   *
-   * @return array
-   *   A numeric array, containing the datasource ID in element 0 and the raw
-   *   item ID or property path in element 1. In the case of
-   *   datasource-independent properties (that is, when there is no prefix),
-   *   element 0 will be NULL.
+   * {@inheritdoc}
    */
   public static function splitCombinedId($combined_id) {
     if (strpos($combined_id, DATASOURCE_ID_SEPARATOR) !== FALSE) {
@@ -100,36 +71,14 @@ class Common {
   }
 
   /**
-   * Determines whether this PHP process is running on the command line.
-   *
-   * @return bool
-   *   TRUE if this PHP process is running via CLI, FALSE otherwise.
+   * {@inheritdoc}
    */
   public static function isRunningInCli() {
     return php_sapi_name() === 'cli';
   }
 
   /**
-   * Checks whether a certain value matches the configuration.
-   *
-   * This unifies checking for matches with the common configuration pattern of
-   * having one "All except those selected"/"Only the selected" option
-   * ("default") and a list of options to select.
-   *
-   * @param mixed $value
-   *   The value to check.
-   * @param array $settings
-   *   The settings to check against, as an associative array with the following
-   *   keys:
-   *   - default: Boolean defining the default for not-selected items. TRUE
-   *     means "All except those selected", FALSE means "Only the selected".
-   *     Defaults to TRUE.
-   *   - selected: A numerically indexed array of the selected options. Defaults
-   *     to an empty array.
-   *
-   * @return bool
-   *   TRUE if the value matches according to the configuration, FALSE
-   *   otherwise.
+   * {@inheritdoc}
    */
   public static function matches($value, array $settings) {
     $settings += [

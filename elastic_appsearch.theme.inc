@@ -1,8 +1,14 @@
 <?php
+
+/**
+ * @file
+ * Contains theme preprocessors.
+ */
+
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\elastic_appsearch\Entity\Server;
 use Drupal\Core\Render\Element;
-use Drupal\Core\Url ;
+use Drupal\Core\Url;
 use Drupal\elastic_appsearch\Utility\Common;
 use Drupal\Core\Link;
 use Drupal\Component\Serialization\Json;
@@ -63,7 +69,7 @@ function template_preprocess_elastic_appsearch_admin_fields_table(array &$variab
 function template_preprocess_engine(array &$variables) {
   $engine = $variables['engine'];
 
-  if(!$engine->getServerInstance()->isAvailable()){
+  if (!$engine->getServerInstance()->isAvailable()) {
     return;
   }
   $engine_info = $engine->info();
@@ -88,7 +94,7 @@ function template_preprocess_engine(array &$variables) {
   $classes = &$row['class'];
 
   $label = t('Engine');
-  $info =  Link::fromTextAndUrl($engine->id(), $engine->toUrl('edit-form'));
+  $info = Link::fromTextAndUrl($engine->id(), $engine->toUrl('edit-form'));
   $rows[] = Common::deepCopy($row);
 
   $label = "Status";
@@ -100,7 +106,7 @@ function template_preprocess_engine(array &$variables) {
   $rows[] = Common::deepCopy($row);
 
   $label = "Documents Processed";
-  $info = ($indexed_count)? $indexed_count : $engine_info['document_count'];
+  $info = ($indexed_count) ? $indexed_count : $engine_info['document_count'];
   $rows[] = Common::deepCopy($row);
 
   $label = "Documents Index";
@@ -108,21 +114,20 @@ function template_preprocess_engine(array &$variables) {
   $rows[] = Common::deepCopy($row);
 
   $failed = ($total_count - $engine_info['document_count']);
-  if($failed){
+  if ($failed) {
     $label = "Failure Count";
     $info = $failed;
     $rows[] = Common::deepCopy($row);
   }
 
-  
   $label = t('Server');
-  $info =  Link::fromTextAndUrl($engine->getServer(), $engine->getServerInstance()->toUrl('canonical'));
+  $info = Link::fromTextAndUrl($engine->getServer(), $engine->getServerInstance()->toUrl('canonical'));
   $rows[] = Common::deepCopy($row);
 
   // Add the indexing progr ess bar.
   $variables['index_progress'] = [
     '#theme' => 'progress_bar',
-    '#percent' => $total_count ? (int) (100 * $engine_info['document_count']/ $total_count) : 100,
+    '#percent' => $total_count ? (int) (100 * $engine_info['document_count'] / $total_count) : 100,
     '#message' => t('@indexed/@total indexed', ['@indexed' => $engine_info['document_count'], '@total' => $total_count]),
   ];
 
@@ -153,24 +158,31 @@ function template_preprocess_server(array &$variables) {
   $engines_in_sync = $server->getEngines();
   $engines = $server->getClient()->listEngines();
 
-  $headers = array('Engine ID', 'Type', 'Document Count', 'Is Sync', 'Datasources','Operations');
-  $rows = array();
-  
-  foreach($engines['results'] as $engine){
+  $headers = [
+    'Engine ID',
+    'Type',
+    'Document Count',
+    'Is Sync',
+    'Datasources',
+    'Operations'
+  ];
+  $rows = [];
+
+  foreach ($engines['results'] as $engine) {
     $is_sync = isset($engines_in_sync[$engine['name']]);
     $rows[] = [
-      'name' => ($is_sync) ? 
-        Link::fromTextAndUrl( $engine['name'], $engines_in_sync[$engine['name']]->toUrl('canonical')) : 
-        $engine['name'],
+      'name' => ($is_sync) ?
+      Link::fromTextAndUrl($engine['name'], $engines_in_sync[$engine['name']]->toUrl('canonical')) :
+      $engine['name'],
       'type' => $engine['type'],
       'count' => $engine['document_count'],
       'is_sync' => ($is_sync) ? 'Yes' : 'No',
       'datasources' => ($is_sync) ? implode(', ', $engines_in_sync[$engine['name']]->datasources()) : '',
       'op' => (!$is_sync) ?
-      Link::fromTextAndUrl('Sync Now', 
-        Url::fromRoute( 'entity.elastic_appsearch_engine.sync',['elastic_appsearch_engine'=>$engine['name']])
-      ) : 
-      buildAjaxUrl($engine),
+      Link::fromTextAndUrl('Sync Now',
+        Url::fromRoute('entity.elastic_appsearch_engine.sync', ['elastic_appsearch_engine' => $engine['name']])
+      ) :
+      build_ajax_url($engine),
     ];
   }
   $variables['table'] = [
@@ -181,29 +193,32 @@ function template_preprocess_server(array &$variables) {
     '#attached' => ['library' => ['core/drupal.dialog.ajax']]
   ];
 
-  // return theme('table', array('header' => $headers, 'rows' => $rows));
+  // Return theme('table', array('header' => $headers, 'rows' => $rows));.
 }
 
-function buildAjaxUrl($engine){
-  $link_options = array(
-    'attributes' => array(
-      'class' => array(
+/**
+ * {@inheritdoc}
+ */
+function build_ajax_url($engine) {
+  $link_options = [
+    'attributes' => [
+      'class' => [
         'use-ajax',
         'button',
         'button-action',
         'bg-green',
         'button--primary',
         'button--small',
-      ),
+      ],
       'data-dialog-type' => 'modal',
       'data-dialog-options' => Json::encode([
         'width' => 700,
       ])
-    )
-  );
+    ]
+  ];
   $url = Url::fromRoute(
     'elastic_appsearch.elastic_appsearch_server.engine_schema',
-    ['elastic_appsearch_engine'=>$engine['name']]
+    ['elastic_appsearch_engine' => $engine['name']]
   );
   $url->setOptions($link_options);
   return Link::fromTextAndUrl('Click here', $url)->toString();

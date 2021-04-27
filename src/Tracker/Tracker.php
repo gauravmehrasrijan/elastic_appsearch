@@ -1,6 +1,7 @@
 <?php
 
 namespace Drupal\elastic_appsearch\Tracker;
+
 use Drupal\elastic_appsearch\Utility\Common;
 
 /**
@@ -32,11 +33,19 @@ class Tracker {
    */
   protected $timeService;
 
+  /**
+   * The elstic appsearch engine instance.
+   *
+   * @var \Drupal\elastic_appsearch\Entity\EngineInterface|null
+   */
   protected $engine;
 
-  public function getInstance($engine = NULL){
+  /**
+   * Return engine instance.
+   */
+  public function getInstance($engine = NULL) {
 
-    if($engine){
+    if ($engine) {
       $this->engine = $engine;
     }
 
@@ -118,7 +127,7 @@ class Tracker {
   /**
    * Creates a SELECT statement which filters on the not indexed items.
    *
-   * @param string|null $datasource_id
+   * @param string|null $engine_id
    *   (optional) If specified, only items of the datasource with that ID are
    *   retrieved.
    *
@@ -144,7 +153,7 @@ class Tracker {
   /**
    * {@inheritdoc}
    */
-  public function trackItemsInserted(array $ids, $status=NULL) {
+  public function trackItemsInserted(array $ids, $status = NULL) {
     $transaction = $this->getDatabaseConnection()->startTransaction();
     try {
       $engine_id = $this->engine->id();
@@ -189,7 +198,7 @@ class Tracker {
    * {@inheritdoc}
    */
   public function trackItemsUpdated(array $ids = NULL) {
-    
+
     $transaction = $this->getDatabaseConnection()->startTransaction();
     try {
       // Process the IDs in chunks so we don't create an overly large UPDATE
@@ -207,7 +216,7 @@ class Tracker {
         // Update the status of unindexed items only if the item order is LIFO.
         // (Otherwise, an item that's regularly being updated might never get
         // indexed.)
-        // $update->condition('status', self::STATUS_INDEXED);
+        // $update->condition('status', self::STATUS_INDEXED);.
         $update->execute();
       }
     }
@@ -404,7 +413,7 @@ class Tracker {
         'changed' => $this->getTimeService()->getRequestTime(),
         'status' => $this::STATUS_INDEXED,
       ]);
-    
+
       if ($insert->count()) {
         $insert->execute();
       }

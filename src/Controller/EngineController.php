@@ -8,6 +8,7 @@ use GuzzleHttp\ClientInterface;
 use Drupal\Core\Database\Driver\mysql\Connection;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Drupal\elastic_appsearch\Entity\EngineInterface;
+use Drupal\Component\Render\FormattableMarkup;
 
 /**
  * Class EngineController.
@@ -35,7 +36,6 @@ class EngineController extends ControllerBase {
    */
   protected $queue;
 
-
   /**
    * Constructs a new EngineController object.
    */
@@ -59,20 +59,20 @@ class EngineController extends ControllerBase {
   /**
    * Returns the page title for an engine's "View" tab.
    *
-   * @param \Drupal\search_api\EngineInterface $engine
+   * @param \Drupal\search_api\EngineInterface $elastic_appsearch_engine
    *   The index that is displayed.
    *
    * @return string
    *   The page title.
    */
-  public function pageTitle(EngineInterface $engine) {
-    return new FormattableMarkup('@title', ['@title' => $engine->label()]);
+  public function pageTitle(EngineInterface $elastic_appsearch_engine) {
+    return new FormattableMarkup('@title', ['@title' => $elastic_appsearch_engine->label()]);
   }
 
   /**
    * Displays information about a engine.
    *
-   * @param \Drupal\search_api\IndexInterface $search_api_index
+   * @param \Drupal\elastic_appsearch\EngineInterface $elastic_appsearch_engine
    *   The index to display.
    *
    * @return array

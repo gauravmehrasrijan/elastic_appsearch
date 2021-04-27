@@ -1,6 +1,7 @@
 <?php
 
 namespace Drupal\elastic_appsearch\Entity;
+
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 
@@ -60,7 +61,7 @@ class Server extends ConfigEntityBase implements ServerInterface {
    * @var string
    */
   protected $description;
-  
+
   /**
    * The Server host.
    *
@@ -79,29 +80,47 @@ class Server extends ConfigEntityBase implements ServerInterface {
   /**
    * The Server status.
    *
-   * @var boolean
+   * @var bool
    */
   protected $status;
 
+  /**
+   * {@inheritdoc}
+   */
   protected $client;
 
-  public function getDescription(){
+  /**
+   * {@inheritdoc}
+   */
+  public function getDescription() {
     return $this->description;
   }
 
-  public function getHost(){
+  /**
+   * {@inheritdoc}
+   */
+  public function getHost() {
     return $this->host;
   }
 
-  public function getStatus(){
+  /**
+   * {@inheritdoc}
+   */
+  public function getStatus() {
     return $this->status;
   }
 
-  public function getSecret(){
+  /**
+   * {@inheritdoc}
+   */
+  public function getSecret() {
     return $this->secret;
   }
 
-  public function preSave(EntityStorageInterface $storage){
+  /**
+   * {@inheritdoc}
+   */
+  public function preSave(EntityStorageInterface $storage) {
     parent::preSave($storage);
 
     // The rest of the code only applies to updates.
@@ -110,8 +129,11 @@ class Server extends ConfigEntityBase implements ServerInterface {
     }
   }
 
-  public function getClient(){
-    if(!empty($this->client[$this->id()])){
+  /**
+   * {@inheritdoc}
+   */
+  public function getClient() {
+    if (!empty($this->client[$this->id()])) {
       return $this->client[$this->id()];
     }
 
@@ -120,27 +142,33 @@ class Server extends ConfigEntityBase implements ServerInterface {
     return $this->client[$this->id()];
   }
 
-  public function getEngines(array $properties = []){
+  /**
+   * {@inheritdoc}
+   */
+  public function getEngines(array $properties = []) {
     $storage = \Drupal::entityTypeManager()->getStorage('elastic_appsearch_engine');
     return $storage->loadByProperties(['server' => $this->id()] + $properties);
   }
 
-  public function isAvailable(){
+  /**
+   * {@inheritdoc}
+   */
+  public function isAvailable() {
     $is_available = TRUE;
-    try{
+    try {
       $instance = $this->getClient();
-      if(!empty($instance)){
+      if (!empty($instance)) {
         $engine = $instance->listEngines();
         return is_array($engine);
       }
     }
-    catch (\Exception $e){
+    catch (\Exception $e) {
       $is_available = FALSE;
-      \Drupal::logger('elastic_appsearch')->notice('Unable to reach server - ' .$this->id() );
+      \Drupal::logger('elastic_appsearch')->notice('Unable to reach server - ' . $this->id());
     }
 
     return $is_available;
-    
+
   }
-  
+
 }

@@ -93,7 +93,7 @@ class Engine extends ConfigEntityBase implements EngineInterface {
   /**
    * The Engine status.
    *
-   * @var boolean
+   * @var bool
    */
   protected $status;
 
@@ -104,51 +104,75 @@ class Engine extends ConfigEntityBase implements EngineInterface {
    */
   protected $client;
 
+  /**
+   * {@inheritdoc}
+   */
   protected $trackerInstance;
 
-  public function getLanguage(){
+  /**
+   * {@inheritdoc}
+   */
+  public function getLanguage() {
     return $this->language;
   }
 
-  public function getServer(){
+  /**
+   * {@inheritdoc}
+   */
+  public function getServer() {
     return $this->server;
   }
 
-  public function datasources(){
+  /**
+   * {@inheritdoc}
+   */
+  public function datasources() {
     return $this->datasources;
   }
 
-  public function getServerInstance(){
+  /**
+   * {@inheritdoc}
+   */
+  public function getServerInstance() {
     return \Drupal::entityTypeManager()
       ->getStorage('elastic_appsearch_server')
       ->load($this->getServer());
   }
 
-  public function getClient(){
-    if($_server = $this->getServerInstance()){
+  /**
+   * {@inheritdoc}
+   */
+  public function getClient() {
+    if ($_server = $this->getServerInstance()) {
       return $_server->getClient();
     }
   }
 
-  public function getFields(){
+  /**
+   * {@inheritdoc}
+   */
+  public function getFields() {
     $collection = [];
-    if(!empty($this->datasources())){
-      foreach($this->datasources() as $bundle){
+    if (!empty($this->datasources())) {
+      foreach ($this->datasources() as $bundle) {
         $entityFieldManager = \Drupal::service('entity_field.manager');
         $fields = $entityFieldManager->getFieldDefinitions('node', $bundle);
-        foreach($fields as $key=>$field){
-          if(!isset($collection[$key])){
+        foreach ($fields as $key => $field) {
+          if (!isset($collection[$key])) {
             $collection[$key]['field'] = $field;
           }
           $collection[$key]['appears_in'][] = $bundle;
         }
       }
     }
-    
+
     return $collection;
   }
 
-  public function supportedtypes(){
+  /**
+   * {@inheritdoc}
+   */
+  public function supportedtypes() {
     return [
       'text' => 'Text',
       'number' => 'Number',
@@ -157,48 +181,66 @@ class Engine extends ConfigEntityBase implements EngineInterface {
     ];
   }
 
-  public function setSchema($settings){
+  /**
+   * {@inheritdoc}
+   */
+  public function setSchema($settings) {
     $this->schema = $settings;
   }
 
-  public function getEngineFields(){
+  /**
+   * {@inheritdoc}
+   */
+  public function getEngineFields() {
     $collection = [];
-    if(!empty($this->schema)){
-      foreach($this->schema as $schema){
+    if (!empty($this->schema)) {
+      foreach ($this->schema as $schema) {
         $collection[$schema['field_id']] = $schema;
       }
     }
     return $collection;
   }
 
-  public function getSchema(){
+  /**
+   * {@inheritdoc}
+   */
+  public function getSchema() {
     return $this->schema;
   }
 
-  public function getStatus(){
+  /**
+   * {@inheritdoc}
+   */
+  public function getStatus() {
     return $this->status;
   }
 
-
-  public function info(){
+  /**
+   * {@inheritdoc}
+   */
+  public function info() {
     $elasticlient = $this->getClient();
 
-    if(!$elasticlient){
+    if (!$elasticlient) {
       return;
     }
     $engine = $elasticlient->getEngine($this->id());
 
-    if($engine){
+    if ($engine) {
       return $engine;
     }
   }
 
-  public function preSave(EntityStorageInterface $storage){
-    if($this->isNew()){
-      try{
+  /**
+   * {@inheritdoc}
+   */
+  public function preSave(EntityStorageInterface $storage) {
+    if ($this->isNew()) {
+      try {
         $this->getClient()->createEngine($this->id(), $this->getLanguage());
-      }catch(\Exception $e){
-        \Drupal::logger('elastic_appsearch')->notice('Engine already exists on remote server - ' .$this->id() );
+      }
+      catch (\Exception $e) {
+        \Drupal::logger('elastic_appsearch')->notice('Engine already exists on remote server - ' . $this->id());
       }
     }
   }
@@ -208,11 +250,12 @@ class Engine extends ConfigEntityBase implements EngineInterface {
    */
   public function delete() {
     parent::delete();
-    if($this->getClient()){
-      try{
+    if ($this->getClient()) {
+      try {
         $this->getClient()->deleteEngine($this->id());
-      }catch(\Exception $e){
-        \Drupal::logger('elastic_appsearch')->notice('Unable to delete engine - ' .$this->id() );
+      }
+      catch (\Exception $e) {
+        \Drupal::logger('elastic_appsearch')->notice('Unable to delete engine - ' . $this->id());
       }
     }
   }
@@ -225,28 +268,43 @@ class Engine extends ConfigEntityBase implements EngineInterface {
     return $this->trackerInstance;
   }
 
-  public function getIndexItemsCount(){
+  /**
+   * {@inheritdoc}
+   */
+  public function getIndexItemsCount() {
     return Database::getNodeCount($this->datasources());
   }
 
-  public function setItemsTrackable(){
+  /**
+   * {@inheritdoc}
+   */
+  public function setItemsTrackable() {
     $nodes = Database::getNodes($this->datasources());
     $this->getTrackerInstance()->trackAllItemsDeleted();
     $this->getTrackerInstance()->trackItemsInserted($nodes);
   }
 
-  public function indexDocuments($documents){
+  /**
+   * {@inheritdoc}
+   */
+  public function indexDocuments($documents) {
     return $this->getClient()->indexDocuments($this->id(), $documents);
   }
 
-  public function deleteDocuments($documents){
+  /**
+   * {@inheritdoc}
+   */
+  public function deleteDocuments($documents) {
     return $this->getClient()->deleteDocuments($this->id(), $documents);
   }
 
-  public function performTasks($tasks){
+  /**
+   * {@inheritdoc}
+   */
+  public function performTasks($tasks) {
 
-    BatchHelper::setup($this, $tasks, ['limit'=>100, 'batch_size'=>100]);
-    
+    BatchHelper::setup($this, $tasks, ['limit' => 100, 'batch_size' => 100]);
+
   }
 
 }

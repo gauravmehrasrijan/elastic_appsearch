@@ -5,7 +5,7 @@ namespace Drupal\elastic_appsearch\Entity;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 
 /**
- * Provides an interface for defining Reference ui entities.
+ * Provides an interface for defining Search ui entities.
  */
 interface ReferenceUIInterface extends ConfigEntityInterface {
 

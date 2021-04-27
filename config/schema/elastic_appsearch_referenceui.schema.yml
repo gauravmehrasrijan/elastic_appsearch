@@ -1,6 +1,6 @@
 elastic_appsearch.elastic_appsearch_referenceui.*:
   type: config_entity
-  label: 'Reference ui config'
+  label: 'Search ui config'
   mapping:
     id:
       type: string
@@ -9,7 +9,7 @@ elastic_appsearch.elastic_appsearch_referenceui.*:
     label:
       type: label
       label: 'Label'
-      
+
     engine:
       type: string
       label: 'Engine ID'

@@ -70,10 +70,10 @@ class EngineReindexConfirmForm extends EntityConfirmFormBase {
     $engine = $this->getEntity();
 
     try {
-      $engine->performTasks(['clear','index']);
+      $engine->performTasks(['clear', 'index']);
     }
     catch (SearchApiException $e) {
-      //echo $e->getMessage(); exit;
+      // Echo $e->getMessage(); exit;.
     }
 
     $form_state->setRedirect('entity.elastic_appsearch_engine.canonical', ['elastic_appsearch_engine' => $engine->id()]);

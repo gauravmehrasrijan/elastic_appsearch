@@ -12,6 +12,6 @@ entity.engine.add_form:
     - entity.elastic_appsearch_server.collection
 entity.elastic_appsearch_referenceui.add_form:
   route_name: entity.elastic_appsearch_referenceui.add_form
-  title: 'Add Reference UI'
+  title: 'Add Search UI'
   appears_on:
     - entity.elastic_appsearch_referenceui.collection
