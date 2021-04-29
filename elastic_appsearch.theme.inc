@@ -1,10 +1,17 @@
 <?php
+
+/**
+ * @file
+ * Contains theme preprocessors.
+ */
+
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\elastic_appsearch\Entity\Server;
 use Drupal\Core\Render\Element;
-use Drupal\Core\Url ;
+use Drupal\Core\Url;
 use Drupal\elastic_appsearch\Utility\Common;
 use Drupal\Core\Link;
+use Drupal\Component\Serialization\Json;
 
 /**
  * Prepares variables for elastic_appsearch_admin_fields_table form templates.
@@ -61,6 +68,10 @@ function template_preprocess_elastic_appsearch_admin_fields_table(array &$variab
  */
 function template_preprocess_engine(array &$variables) {
   $engine = $variables['engine'];
+
+  if (!$engine->getServerInstance()->isAvailable()) {
+    return;
+  }
   $engine_info = $engine->info();
   $tracker = $engine->getTrackerInstance();
   $indexed_count = $tracker->getIndexedItemsCount();
@@ -70,55 +81,48 @@ function template_preprocess_engine(array &$variables) {
   $rows = [];
   // Create a row template with references so we don't have to deal with the
   // complicated structure for each individual row.
-  $row = [
-    'data' => [
-      ['header' => TRUE],
-      '',
-    ],
-    'class' => [],
-  ];
-  // Get the individual parts of the row by reference.
-  $label = &$row['data'][0]['data'];
-  $info = &$row['data'][1];
-  $classes = &$row['class'];
-
-  $label = t('Engine');
-  $info =  Link::fromTextAndUrl($engine->id(), $engine->toUrl('edit-form'));
-  $rows[] = Common::deepCopy($row);
-
-  $label = "Status";
-  $info = $engine->status() ? "Enabled" : "Disabled";
-  $rows[] = Common::deepCopy($row);
-
-  $label = "Total Documents";
-  $info = $total_count;
-  $rows[] = Common::deepCopy($row);
-
-  $label = "Documents Processed";
-  $info = ($indexed_count)? $indexed_count : $engine_info['document_count'];
-  $rows[] = Common::deepCopy($row);
-
-  $label = "Documents Index";
-  $info = $engine_info['document_count'];
-  $rows[] = Common::deepCopy($row);
-
-  $failed = ($total_count - $engine_info['document_count']);
-  if($failed){
-    $label = "Failure Count";
-    $info = $failed;
-    $rows[] = Common::deepCopy($row);
-  }
-
   
-  $label = t('Server');
-  $info =  Link::fromTextAndUrl($engine->getServer(), $engine->getServerInstance()->toUrl('canonical'));
-  $rows[] = Common::deepCopy($row);
+  $rows[] = [
+    'label' => t('Engine'),
+    'info' => Link::fromTextAndUrl($engine->id(), $engine->toUrl('edit-form'))
+  ];
+
+  $rows[] = [
+    'label' => t('Status'),
+    'info' => $engine->status() ? "Enabled" : "Disabled"
+  ];
+
+
+  $rows[] = [
+    'label' => t('Total Documents'),
+    'info' => $total_count
+  ];
+
+  $rows[] = [
+    'label' => t('Documents Processed'),
+    'info' => ($indexed_count) ? $indexed_count : $engine_info['document_count']
+  ];
+
+  $rows[] = [
+    'label' => t('Documents Processed'),
+    'info' => ($indexed_count) ? $indexed_count : $engine_info['document_count']
+  ];
+
+  $rows[] = [
+    'label' => t('Failure Count'),
+    'info' => ($total_count - $engine_info['document_count'])
+  ];
+
+  $rows[] = [
+    'label' => t('Server'),
+    'info' => Link::fromTextAndUrl($engine->getServer(), $engine->getServerInstance()->toUrl('canonical'))
+  ];
 
   // Add the indexing progr ess bar.
   $variables['index_progress'] = [
     '#theme' => 'progress_bar',
-    '#percent' => $total_count ? (int) (100 * $engine_info['document_count']/ $total_count) : 100,
-    '#message' => t('@indexed/@total indexed', ['@indexed' => $engine_info['document_count'], '@total' => $total_count]),
+    '#percent' => $total_count ? (int) (100 * $indexed_count / $total_count) : 100,
+    '#message' => t('@indexed/@total indexed', ['@indexed' => $indexed_count, '@total' => $total_count]),
   ];
 
   // Append the index info table to the output.
@@ -132,4 +136,85 @@ function template_preprocess_engine(array &$variables) {
     ],
   ];
 
+}
+
+/**
+ * Prepares variables for search_api_index templates.
+ *
+ * Default template: search-api-index.html.twig.
+ *
+ * @param array &$variables
+ *   An associative array containing:
+ *   - index: The search index to display.
+ */
+function template_preprocess_server(array &$variables) {
+  $server = $variables['server'];
+  $engines_in_sync = $server->getEngines();
+  $engines = $server->getClient()->listEngines();
+
+  $headers = [
+    'Engine ID',
+    'Type',
+    'Document Count',
+    'Is Sync',
+    'Datasources',
+    'Operations'
+  ];
+  $rows = [];
+
+  foreach ($engines['results'] as $engine) {
+    $is_sync = isset($engines_in_sync[$engine['name']]);
+
+    $sync_now_button = Link::fromTextAndUrl('Sync Now',
+      Url::fromRoute('entity.elastic_appsearch_engine.sync',
+        ['elastic_appsearch_engine' => $engine['name']]
+      )
+    );
+
+    $rows[] = [
+      'name' => $engine['name'],
+      'type' => $engine['type'],
+      'count' => $engine['document_count'],
+      'is_sync' => ($is_sync) ? 'Yes' : 'No',
+      'datasources' => ($is_sync) ? implode(', ', $engines_in_sync[$engine['name']]->datasources()) : '',
+      'op' => (!$is_sync) ? $sync_now_button : build_ajax_url($engine),
+    ];
+  }
+  $variables['table'] = [
+    '#theme' => 'table',
+    '#header' => $headers,
+    '#rows' => $rows,
+    '#empty' => t('No Engine found on the server'),
+    '#attached' => ['library' => ['core/drupal.dialog.ajax']]
+  ];
+
+  // Return theme('table', array('header' => $headers, 'rows' => $rows));.
+}
+
+/**
+ * {@inheritdoc}
+ */
+function build_ajax_url($engine) {
+  $link_options = [
+    'attributes' => [
+      'class' => [
+        'use-ajax',
+        'button',
+        'button-action',
+        'bg-green',
+        'button--primary',
+        'button--small',
+      ],
+      'data-dialog-type' => 'modal',
+      'data-dialog-options' => Json::encode([
+        'width' => 700,
+      ])
+    ]
+  ];
+  $url = Url::fromRoute(
+    'elastic_appsearch.elastic_appsearch_server.engine_schema',
+    ['elastic_appsearch_engine' => $engine['name']]
+  );
+  $url->setOptions($link_options);
+  return Link::fromTextAndUrl('Click here', $url)->toString();
 }

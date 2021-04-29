@@ -2,7 +2,7 @@
 
 namespace Drupal\elastic_appsearch\Form;
 
-use Drupal\Core\Entity\EntityConfirmFormBase;
+use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Url;
@@ -13,7 +13,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Defines a confirm form for reindexing an index.
  */
-class EngineClearIndexConfirmForm extends EntityConfirmFormBase {
+class SyncEngineConfirmForm extends ConfirmFormBase {
 
   /**
    * The messenger.
@@ -44,8 +44,15 @@ class EngineClearIndexConfirmForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
+  public function getFormId() : string {
+    return "confirm_sync_engine";
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getQuestion() {
-    return $this->t('Are you sure you want to clear the search index %name?', ['%name' => $this->entity->label()]);
+    return $this->t('Are you sure you want to sync %name, Make sure that the engine documents indexed on the server was originated from this drupal install only, You may otherwise sabotise the engine in case it is also in sync with other drupal instance?', ['%name' => 'engine name']);
   }
 
   /**
@@ -59,7 +66,15 @@ class EngineClearIndexConfirmForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('entity.elastic_appsearch_engine.canonical', ['elastic_appsearch_engine' => $this->entity->id()]);
+    // Return new Url('entity.elastic_appsearch_engine.canonical', ['elastic_appsearch_engine' => $this->entity->id()]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildForm(array $form, FormStateInterface $form_state, string $elastic_appsearch_engine = NULL) {
+    $this->engine = $elastic_appsearch_engine;
+    return parent::buildForm($form, $form_state);
   }
 
   /**
@@ -73,7 +88,7 @@ class EngineClearIndexConfirmForm extends EntityConfirmFormBase {
       $engine->performTasks(['clear']);
     }
     catch (SearchApiException $e) {
-      \Drupal::logger('elastic_appsearch')->error($e->getMessage());
+      // Echo $e->getMessage(); exit;.
     }
 
     $form_state->setRedirect('entity.elastic_appsearch_engine.canonical', ['elastic_appsearch_engine' => $engine->id()]);

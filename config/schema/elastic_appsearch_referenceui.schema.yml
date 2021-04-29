@@ -1,0 +1,38 @@
+elastic_appsearch.elastic_appsearch_referenceui.*:
+  type: config_entity
+  label: 'Search ui config'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+
+    label:
+      type: label
+      label: 'Label'
+
+    engine:
+      type: string
+      label: 'Engine ID'
+
+    field_title:
+      type: string
+      label: 'Used as the top-level visual identifier for every rendered result.'
+
+    field_url:
+      type: string
+      label: "Used as a result's link target, if applicable."
+
+    fields_filter:
+      type: sequence
+      label: 'Faceted values rendered as filters and available as query refinement.'
+      
+    fields_sort:
+      type: sequence
+      label: 'Used to display result sorting options, ascending and descending.'
+
+    uuid:
+      type: string
+
+    status:
+      type: boolean
+      label: 'Engine status'

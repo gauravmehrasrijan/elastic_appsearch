@@ -33,7 +33,6 @@ class EngineControllerTest extends WebTestBase {
    */
   protected $queue;
 
-
   /**
    * {@inheritdoc}
    */

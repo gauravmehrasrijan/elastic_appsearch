@@ -12,7 +12,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Url;
 use Drupal\node\Entity\NodeType;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-
+use Drupal\elastic_appsearch\Entity\EngineInterface;
 
 /**
  * Provides a listing of Server entities.
@@ -74,9 +74,9 @@ class ServerListBuilder extends ConfigEntityListBuilder {
       && $entity instanceof ServerInterface
       && !$entity->isAvailable()
     ) {
-    $row['data']['status']['data'] = $this->t('Unavailable');
-    $row['class'][] = 'color-error';
-  }
+      $row['data']['status']['data'] = $this->t('Unavailable');
+      $row['class'][] = 'color-error';
+    }
 
     return $row;
   }
@@ -85,6 +85,7 @@ class ServerListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function render() {
+
     $entity_groups = $this->loadGroups();
 
     $list['#type'] = 'container';
@@ -126,9 +127,9 @@ class ServerListBuilder extends ConfigEntityListBuilder {
     $servers = \Drupal::entityTypeManager()->getStorage('elastic_appsearch_server')->loadMultiple();
     /** @var \Drupal\search_api\ServerInterface[] $servers */
     $engines = \Drupal::entityTypeManager()->getStorage('elastic_appsearch_engine')->loadMultiple();
-    
+
     $server_groups = [];
-    foreach ($servers as $server) {     
+    foreach ($servers as $server) {
       $server_group = [
         'elastic_appsearch_server.' . $server->id() => $server,
       ];
@@ -164,4 +165,46 @@ class ServerListBuilder extends ConfigEntityListBuilder {
       }
     });
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDefaultOperations(EntityInterface $entity) {
+    $operations = parent::getDefaultOperations($entity);
+
+    if ($entity instanceof ServerInterface) {
+      $route_parameters['elastic_appsearch_server'] = $entity->id();
+      $operations['view'] = [
+        'title' => $this->t('View'),
+        'weight' => 20,
+        'url' => new Url('elastic_appsearch.elastic_appsearch_server.canonical', $route_parameters),
+      ];
+    }
+
+    if ($entity instanceof EngineInterface) {
+      $route_parameters['elastic_appsearch_engine'] = $entity->id();
+      $operations['view'] = [
+        'title' => $this->t('View'),
+        'weight' => 20,
+        'url' => new Url('elastic_appsearch.elastic_appsearch_engine.canonical', $route_parameters),
+      ];
+
+      $operations['schema'] = [
+        'title' => $this->t('Field Schema'),
+        'weight' => 21,
+        'url' => new Url(
+          'entity.elastic_appsearch_engine.schema', $route_parameters),
+      ];
+
+      $operations['referenceui'] = [
+        'title' => $this->t('Search UI'),
+        'weight' => 21,
+        'url' => new Url(
+          'entity.elastic_appsearch_referenceui.collection', $route_parameters),
+      ];
+    }
+
+    return $operations;
+  }
+
 }

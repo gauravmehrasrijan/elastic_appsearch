@@ -1,6 +1,7 @@
 <?php
 
 namespace Drupal\elastic_appsearch;
+
 use GuzzleHttp\ClientInterface;
 use Drupal\Core\Database\Driver\mysql\Connection;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -46,10 +47,13 @@ class ElasticAppSearchClient implements ElasticAppsearchClientInterface {
 
   }
 
-  public function getInstance($server){
+  /**
+   * {@inheritdoc}
+   */
+  public function getInstance($server) {
 
-    if(!empty($this->client)){
-      return $this->client;
+    if (!empty($this->client[$server->id()])) {
+      return $this->client[$server->id()];
     }
 
     $clientBuilder = ClientBuilder::create(
@@ -57,22 +61,27 @@ class ElasticAppSearchClient implements ElasticAppsearchClientInterface {
       $server->getSecret()
     );
 
-    $this->client = $clientBuilder->build();
+    $this->client[$server->id()] = $clientBuilder->build();
 
-    return $this->client;
+    return $this->client[$server->id()];
   }
 
-  public static function connect($server, $apikey, $engine = FALSE){
-    $clientBuilder = ClientBuilder::create($server, $apikey );
+  /**
+   * {@inheritdoc}
+   */
+  public static function connect($server, $apikey, $engine = FALSE) {
+    $clientBuilder = ClientBuilder::create($server, $apikey);
     $client = $clientBuilder->build();
-    if($engine){
+    if ($engine) {
       $engine = $client->getEngine($engine);
+      return $client;
     }
-    return $client;
   }
 
-
-  public function setEngine($engine){
+  /**
+   * {@inheritdoc}
+   */
+  public function setEngine($engine) {
     $this->engine = $this->client->getEngine($engine);
     return this;
   }

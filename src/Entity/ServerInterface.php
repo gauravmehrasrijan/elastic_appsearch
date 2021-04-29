@@ -9,14 +9,24 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
  */
 interface ServerInterface extends ConfigEntityInterface {
 
-  // Add get/set methods for your configuration properties here.
-
+  /**
+   * Add get/set methods for your configuration properties here.
+   */
   public function getDescription();
 
+  /**
+   * {@inheritdoc}
+   */
   public function getHost();
 
+  /**
+   * {@inheritdoc}
+   */
   public function getStatus();
 
+  /**
+   * {@inheritdoc}
+   */
   public function getSecret();
-  
+
 }

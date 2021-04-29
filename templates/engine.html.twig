@@ -23,3 +23,7 @@
   <div class="search-api-index-status">{{ index_progress }}</div>
 {% endif %}
 {{ table }}
+
+{% if table is empty %}
+  <p class="error" style="color: red;">Engine <em>{{ engine.id }}</em> not found at the server <em>{{ engine.server }}</em>!</p>
+{% endif %}

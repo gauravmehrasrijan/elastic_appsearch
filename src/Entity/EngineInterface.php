@@ -9,12 +9,19 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
  */
 interface EngineInterface extends ConfigEntityInterface {
 
-  // Add get/set methods for your configuration properties here.
-
+  /**
+   * Add get/set methods for your configuration properties here.
+   */
   public function getLanguage();
 
+  /**
+   * {@inheritdoc}
+   */
   public function getFields();
 
+  /**
+   * {@inheritdoc}
+   */
   public function getEngineFields();
-  
+
 }

@@ -2,9 +2,9 @@
 
 namespace Drupal\elastic_appsearch\Form;
 
+use Drupal\node\Entity\NodeType;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
-
 
 /**
  * Class EngineForm.
@@ -86,8 +86,11 @@ class EngineForm extends EntityForm {
     return $form;
   }
 
-  public function getAvailbleContentTypes(){
-    $node_types = \Drupal\node\Entity\NodeType::loadMultiple();
+  /**
+   * Fetch available content types available in system.
+   */
+  public function getAvailbleContentTypes() {
+    $node_types = NodeType::loadMultiple();
     // If you need to display them in a drop down:
     $types = [];
     foreach ($node_types as $node_type) {
@@ -96,9 +99,12 @@ class EngineForm extends EntityForm {
     return $types;
   }
 
-  public function getSupportedLanguages(){
+  /**
+   * Returns array of languages supported by appsearch.
+   */
+  public function getSupportedLanguages() {
     return [
-      'Universal'=> 'Universal',
+      'Universal' => 'Universal',
       'zh' => 'Chinese',
       'da' => 'Danish',
       'de' => 'Genman',
@@ -113,12 +119,15 @@ class EngineForm extends EntityForm {
     ];
   }
 
-  public function getActiveEngines(){
+  /**
+   * Get available engines.
+   */
+  public function getActiveEngines() {
     $servers = \Drupal::entityTypeManager()->getStorage('elastic_appsearch_server')->loadMultiple();
-    
+
     $server_collection = [];
 
-    foreach ( $servers as $key => $server){
+    foreach ($servers as $key => $server) {
       $server_collection[$key] = $server->label();
     }
 
@@ -132,7 +141,7 @@ class EngineForm extends EntityForm {
     $engine = $this->entity;
     $status = $engine->save();
 
-    if($status){
+    if ($status) {
       $engine->setItemsTrackable();
     }
 

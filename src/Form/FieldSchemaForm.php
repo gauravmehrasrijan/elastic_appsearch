@@ -80,11 +80,11 @@ class FieldSchemaForm extends EntityForm {
     EntityTypeManagerInterface $entity_type_manager,
     RendererInterface $renderer,
     MessengerInterface $messenger) {
-    
+
     $this->entityTypeManager = $entity_type_manager;
-    
+
     $this->renderer = $renderer;
-    
+
     $this->messenger = $messenger;
   }
 
@@ -121,7 +121,7 @@ class FieldSchemaForm extends EntityForm {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    
+
     $form['description']['#markup'] = $this->t('<p>The data type of a field determines how it can be used for searching and filtering. The boost is used to give additional weight to certain fields, for example titles or tags.</p> <p>For information about the data types available for indexing, see the <a href=":url">data types table</a> at the bottom of the page.</p>', [':url' => '#search-api-data-types-table']);
     $engine = $this->entity;
     $fields = $engine->getFields();
@@ -131,7 +131,7 @@ class FieldSchemaForm extends EntityForm {
     $form['#title'] = $this->t('Manage fields for search engine %label', ['%label' => $engine->label()]);
     $form['#tree'] = TRUE;
 
-    if(!empty($fields)){
+    if (!empty($fields)) {
       $form['_general'] = $this->buildFieldsTable($fields);
       $form['_general']['#title'] = $this->t('General');
     }
@@ -151,7 +151,7 @@ class FieldSchemaForm extends EntityForm {
    *   The build structure.
    */
   protected function buildFieldsTable(array $fields) {
-      
+
     $types = $this->entity->supportedtypes();
     $_fields = $this->entity->getEngineFields();
     $build = [
@@ -172,8 +172,8 @@ class FieldSchemaForm extends EntityForm {
     ];
 
     ksort($fields);
-    
-    foreach ($fields as $key => $field) {      
+
+    foreach ($fields as $key => $field) {
       $build['fields'][$key]['title'] = [
         '#type' => 'textfield',
         '#default_value' => $field['field']->getLabel() ?: $key,
@@ -188,9 +188,9 @@ class FieldSchemaForm extends EntityForm {
         '#required' => TRUE,
         '#size' => 35,
       ];
-      
+
       $build['fields'][$key]['appears_in'] = [
-        '#markup' => Html::escape(implode(', ',$field['appears_in'])),
+        '#markup' => Html::escape(implode(', ', $field['appears_in'])),
       ];
 
       $build['fields'][$key]['type'] = [
@@ -203,31 +203,34 @@ class FieldSchemaForm extends EntityForm {
         '#type' => 'checkbox',
         '#default_value' => (isset($_fields[$key])) ? 1 : 0,
       ];
-    
+
     }
 
     return $build;
   }
 
-  public function formatSchema($fields, $json = false){
+  /**
+   * Format schema to be easily saved as config entity.
+   */
+  public function formatSchema($fields, $json = FALSE) {
     $schema = [];
-    foreach($fields as $field){
-      if(isset($field['enable']) && $field['enable'] == 1){
-        if($json){
+    foreach ($fields as $field) {
+      if (isset($field['enable']) && $field['enable'] == 1) {
+        if ($json) {
           $schema[$field['id']] = $field['type'];
-        }else{
+        }
+        else {
           $schema[] = [
             'label' => $field['title'],
             'field_id' => $field['id'],
             'type' => $field['type']
           ];
-        } 
+        }
       }
     }
     return $schema;
   }
 
-  
   /**
    * {@inheritdoc}
    */
@@ -239,11 +242,11 @@ class FieldSchemaForm extends EntityForm {
     $engine->setSchema($this->formatSchema($field_values));
 
     $status = $engine->save();
-    
-    if($status){
+
+    if ($status) {
       $engine->setItemsTrackable();
-      if($engine->getServerInstance()->isAvailable()){
-        $engine->getClient()->updateSchema($engine->id(),$this->formatSchema($field_values, true));
+      if ($engine->getServerInstance()->isAvailable()) {
+        $engine->getClient()->updateSchema($engine->id(), $this->formatSchema($field_values, TRUE));
       }
     }
 

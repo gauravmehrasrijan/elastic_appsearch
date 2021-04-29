@@ -76,7 +76,7 @@ class AppsearchForm extends ConfigFormBase {
     $config = $this->config('elastic_appsearch.appsearch');
     $api_endpoint_helptext = 'You can find the API endpoint URL in the credentials sections of the App Search';
     $api_private_key_helptext = 'You can find the your API key URL in the credentials sections of the App Search.';
-    
+
     $form['api_endpoint'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Api Endpoint'),
@@ -103,19 +103,19 @@ class AppsearchForm extends ConfigFormBase {
   }
 
   /**
-  * {@inheritdoc}
-  */
-  public function validateForm(array &$form, FormStateInterface $form_state){
+   * {@inheritdoc}
+   */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
-    
-    try{
+
+    try {
       \Drupal::service('elastic_appsearch.client')::connect(
         $form_state->getValue('api_endpoint'),
         $form_state->getValue('api_private_key'),
         $form_state->getValue('engine_name')
       );
     }
-    catch (\Exception $e){
+    catch (\Exception $e) {
       $form_state->setErrorByName(
         'api_private_key',
         "Unable to make connection to the endpoint using the providec key: " . $e->getMessage()
@@ -133,8 +133,9 @@ class AppsearchForm extends ConfigFormBase {
       ->set('api_private_key', $form_state->getValue('api_private_key'))
       ->set('engine_name', $form_state->getValue('engine_name'))
       ->save();
-    
-      drupal_set_message($this->t('Awesome!! Connection to the endpoint is successfull using the provided key.'));
+
+      $this->messenger()->addMessage($this->t('Connection to the endpoint is successfull using the provided key.'));
+      
   }
 
 }

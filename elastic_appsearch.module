@@ -8,15 +8,12 @@
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\elastic_appsearch\Entity\Server;
 use Drupal\Core\Render\Element;
-use Drupal\Core\Url ;
-
-
+use Drupal\Core\Url;
 
 /*
  * Load all theme functions.
  */
 require_once __DIR__ . '/elastic_appsearch.theme.inc';
-
 
 /**
  * Implements hook_help().
@@ -33,7 +30,6 @@ function elastic_appsearch_help($route_name, RouteMatchInterface $route_match) {
     default:
   }
 }
-
 
 /**
  * Implements hook_theme().
@@ -54,13 +50,30 @@ function elastic_appsearch_theme() {
         'table' => NULL,
         'form' => NULL
       ],
-    ]
-    ];
+    ],
+    'server' => [
+      'variables' => [
+        'data' => NULL,
+        'server' => NULL,
+        'engines' => NULL,
+        'description' => NULL,
+        'table' => NULL,
+        'form' => NULL
+      ],
+    ],
+    'searchui_block' => [
+      'variables' => [
+        'content' => NULL,
+        'engine' => NULL,
+        'fields' => NULL
+      ],
+      'render element' => 'children',
+    ],
+  ];
 }
 
 /**
  * Implements hook_node_update().
- *
  */
 function elastic_appsearch_node_insert($node) {
   \Drupal::service('elastic_appsearch.entity.tracking_manager')->trackerInsertNode($node);
@@ -68,7 +81,6 @@ function elastic_appsearch_node_insert($node) {
 
 /**
  * Implements hook_node_update().
- *
  */
 function elastic_appsearch_node_update($node) {
   \Drupal::service('elastic_appsearch.entity.tracking_manager')->trackerUpdateNode($node);
@@ -76,7 +88,6 @@ function elastic_appsearch_node_update($node) {
 
 /**
  * Implements hook_node_delete().
- *
  */
 function elastic_appsearch_node_delete($node) {
   \Drupal::service('elastic_appsearch.entity.tracking_manager')->trackerDeleteNode($node);
