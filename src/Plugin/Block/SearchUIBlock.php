@@ -105,24 +105,26 @@ class SearchUIBlock extends BlockBase {
       ->getStorage('elastic_appsearch_referenceui')
       ->load($reference_ui_config_name);
 
-      $cid = $this->referenceui->id() . $this->referenceui->getEngine();
+      // $cid = $this->referenceui->id() . $this->referenceui->getEngine();
 
-      if ($cache = \Drupal::cache()->get($cid)) {
-        $data = $cache->data;
-      }
-      else if($this->referenceui){
+      // if ($cache = \Drupal::cache()->get($cid)) {
+      //   $data = $cache->data;
+      // }
+      // else if($this->referenceui){
         $this->engine = $this->referenceui->getEngineInstance();
         $this->server = $this->engine->getServerInstance();
         $data = $this->renderEngineJson();
         \Drupal::cache()->set($reference_ui_config_name, $data);
-      }
+      // }
     }
     return $data;
   }
 
   public function renderEngineJson(){
+
     $field_facets = $field_sort = [];
     $sorts = $this->referenceui->getFieldsSort();
+    // print_r($sorts); exit;
     foreach($sorts as $sort){
       $field_sort[] = $sort;
     }

@@ -57,37 +57,44 @@ class Database {
     $node = Node::load($node_id);
     $response['id'] = $node_id;
     foreach ($node->getFields() as $name => $field) {
-      // Get Type.
-      $field_type = $node->get($name)->getFieldDefinition()->getType();
+      if(isset($_fields[$name])){
+        $field_type = $node->get($name)->getFieldDefinition()->getType();
       
-      switch($field_type) {
-        case 'text_with_summary':
-          $field_name = 'body';
-          $render_array = $node->$field_name->view('full');
-          $rendered = \Drupal::service('renderer')->renderRoot($render_array);
-          $rendered_html = $rendered->__toString();
-          $response[$name] = trim(strip_tags($rendered_html));
-          break;
-        case 'path':
-          $path = explode(', ', $field->getString());
-          $response[$name] = ($path[0]) ? $path[0] : '';
-          break;
-        case 'text':
-        case 'text_long': 
-          $response[$name]  = $field->getString();
-          break;
-        case 'entity_reference':
-          if($field->getFieldDefinition()->getSetting('target_type') == 'taxonomy_term'){
-            foreach($field->referencedEntities() as $entity_reference){
-              $response[$name][] = $entity_reference->getName();
+        switch($field_type) {
+          case 'text_with_summary':
+            $field_name = 'body';
+            $render_array = $node->$field_name->view('full');
+            $rendered = \Drupal::service('renderer')->renderRoot($render_array);
+            if($rendered_html){
+              $rendered_html = $rendered->__toString();
+              $response[$name] = trim(strip_tags($rendered_html));
+            }else{
+              $response[$name] = trim(strip_tags($field->getString()));
             }
-          }else{
-            $response[$name] = $field->getString();
-          }
-          break;
-        default:
-          $response[$name]  = $field->getString();
+            
+            break;
+          case 'path':
+            $path = explode(', ', $field->getString());
+            $response[$name] = ($path[0]) ? $path[0] : '';
+            break;
+          case 'text':
+          case 'text_long': 
+            $response[$name]  = $field->getString();
+            break;
+          case 'entity_reference':
+            if($field->getFieldDefinition()->getSetting('target_type') == 'taxonomy_term'){
+              foreach($field->referencedEntities() as $entity_reference){
+                $response[$name][] = $entity_reference->getName();
+              }
+            }else{
+              $response[$name] = $field->getString();
+            }
+            break;
+          default:
+            $response[$name]  = $field->getString();
+        }
       }
+      
     }
     return $response;
   }
