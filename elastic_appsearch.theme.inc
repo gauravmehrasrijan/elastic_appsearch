@@ -76,11 +76,8 @@ function template_preprocess_engine(array &$variables) {
   $tracker = $engine->getTrackerInstance();
   $indexed_count = $tracker->getIndexedItemsCount();
   $total_count = $tracker->getTotalItemsCount();
-  // Initialize the $rows variable which will hold the different parts of server
-  // information.
+  
   $rows = [];
-  // Create a row template with references so we don't have to deal with the
-  // complicated structure for each individual row.
   
   $rows[] = [
     'label' => t('Engine'),
