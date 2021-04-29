@@ -65,7 +65,8 @@ class Database {
           $field_name = 'body';
           $render_array = $node->$field_name->view('full');
           $rendered = \Drupal::service('renderer')->renderRoot($render_array);
-          $response[$name] = $rendered->__toString();
+          $rendered_html = $rendered->__toString();
+          $response[$name] = trim(strip_tags($rendered_html));
           break;
         case 'path':
           $path = explode(', ', $field->getString());
