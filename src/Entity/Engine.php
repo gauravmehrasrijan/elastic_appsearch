@@ -191,11 +191,16 @@ class Engine extends ConfigEntityBase implements EngineInterface {
   /**
    * {@inheritdoc}
    */
-  public function getEngineFields() {
+  public function getEngineFields($keysonly=FALSE) {
     $collection = [];
     if (!empty($this->schema)) {
       foreach ($this->schema as $schema) {
-        $collection[$schema['field_id']] = $schema;
+        if($keysonly){
+          $collection[] = $schema['field_id'];
+        }else{
+          $collection[$schema['field_id']] = $schema;
+        }
+        
       }
     }
     return $collection;

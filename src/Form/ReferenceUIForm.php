@@ -175,7 +175,8 @@ class ReferenceUIForm extends EntityForm {
     $elastic_appsearch_referenceui = $this->entity;
 
     $status = $elastic_appsearch_referenceui->save();
-
+    $cid = $elastic_appsearch_referenceui->id() . $elastic_appsearch_referenceui->getEngine();
+    \Drupal::cache()->set($cid, null);
     switch ($status) {
       case SAVED_NEW:
         $this->messenger()->addMessage($this->t('Created the %label Search ui.', [

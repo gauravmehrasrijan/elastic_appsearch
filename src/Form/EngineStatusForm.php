@@ -162,7 +162,8 @@ class EngineStatusForm extends FormBase {
         break;
 
       case 'rebuild_tracker':
-        $engine->getTrackerInstance()->trackAllItemsUpdated();
+        $engine->setItemsTrackable();
+        // $engine->getTrackerInstance()->trackAllItemsUpdated();
         $engine->performTasks(['index']);
         break;
     }

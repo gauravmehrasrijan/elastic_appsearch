@@ -1,5 +1,9 @@
 elastic_appsearch-library:
-  
+  js:
+    js/elastic-appsearch.js: {}
+  css:
+    component:
+      css/elastic-appsearch.css: {}
   dependencies:
     - core/drupal.ajax
     - core/jquery #Just to be safe

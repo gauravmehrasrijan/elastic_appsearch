@@ -19,6 +19,9 @@ elastic_appsearch.elastic_appsearch_server.*:
     secret:
       type: string
       label: 'Secret Key'
+    publicKey:
+      type: string
+      label: 'Public Key'
     status:
       label: 'Server Status'
       type: boolean

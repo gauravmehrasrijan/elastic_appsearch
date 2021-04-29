@@ -76,6 +76,13 @@ class Server extends ConfigEntityBase implements ServerInterface {
    */
   protected $secret;
 
+  /**
+   * The Server publicKey.
+   *
+   * @var string
+   */
+  protected $publicKey;
+
 
   /**
    * The Server status.
@@ -116,6 +123,14 @@ class Server extends ConfigEntityBase implements ServerInterface {
   public function getSecret() {
     return $this->secret;
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPublicKey() {
+    return $this->publicKey;
+  }
+
 
   /**
    * {@inheritdoc}

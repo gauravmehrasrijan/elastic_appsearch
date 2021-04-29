@@ -74,8 +74,8 @@ class ElasticAppSearchClient implements ElasticAppsearchClientInterface {
     $client = $clientBuilder->build();
     if ($engine) {
       $engine = $client->getEngine($engine);
+      return $client;
     }
-    return $client;
   }
 
   /**

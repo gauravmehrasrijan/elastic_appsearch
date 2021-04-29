@@ -134,7 +134,8 @@ class AppsearchForm extends ConfigFormBase {
       ->set('engine_name', $form_state->getValue('engine_name'))
       ->save();
 
-    drupal_set_message($this->t('Awesome!! Connection to the endpoint is successfull using the provided key.'));
+      $this->messenger()->addMessage($this->t('Connection to the endpoint is successfull using the provided key.'));
+      
   }
 
 }

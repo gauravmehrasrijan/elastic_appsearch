@@ -73,7 +73,7 @@ class EngineClearIndexConfirmForm extends EntityConfirmFormBase {
       $engine->performTasks(['clear']);
     }
     catch (SearchApiException $e) {
-      // Echo $e->getMessage(); exit;.
+      \Drupal::logger('elastic_appsearch')->error($e->getMessage());
     }
 
     $form_state->setRedirect('entity.elastic_appsearch_engine.canonical', ['elastic_appsearch_engine' => $engine->id()]);

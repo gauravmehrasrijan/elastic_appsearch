@@ -55,6 +55,15 @@ class ServerForm extends EntityForm {
       '#required' => TRUE,
     ];
 
+    $form['publicKey'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Backend Public Key'),
+      '#maxlength' => 255,
+      '#default_value' => $server->getPublicKey(),
+      '#description' => $this->t('Public key used by react search ui.'),
+      '#required' => TRUE,
+    ];
+
     $form['status'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Enable'),

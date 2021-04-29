@@ -60,7 +60,15 @@ function elastic_appsearch_theme() {
         'table' => NULL,
         'form' => NULL
       ],
-    ]
+    ],
+    'searchui_block' => [
+      'variables' => [
+        'content' => NULL,
+        'engine' => NULL,
+        'fields' => NULL
+      ],
+      'render element' => 'children',
+    ],
   ];
 }
 

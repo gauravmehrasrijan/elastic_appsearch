@@ -81,54 +81,48 @@ function template_preprocess_engine(array &$variables) {
   $rows = [];
   // Create a row template with references so we don't have to deal with the
   // complicated structure for each individual row.
-  $row = [
-    'data' => [
-      ['header' => TRUE],
-      '',
-    ],
-    'class' => [],
+  
+  $rows[] = [
+    'label' => t('Engine'),
+    'info' => Link::fromTextAndUrl($engine->id(), $engine->toUrl('edit-form'))
   ];
-  // Get the individual parts of the row by reference.
-  $label = &$row['data'][0]['data'];
-  $info = &$row['data'][1];
-  $classes = &$row['class'];
 
-  $label = t('Engine');
-  $info = Link::fromTextAndUrl($engine->id(), $engine->toUrl('edit-form'));
-  $rows[] = Common::deepCopy($row);
+  $rows[] = [
+    'label' => t('Status'),
+    'info' => $engine->status() ? "Enabled" : "Disabled"
+  ];
 
-  $label = "Status";
-  $info = $engine->status() ? "Enabled" : "Disabled";
-  $rows[] = Common::deepCopy($row);
 
-  $label = "Total Documents";
-  $info = $total_count;
-  $rows[] = Common::deepCopy($row);
+  $rows[] = [
+    'label' => t('Total Documents'),
+    'info' => $total_count
+  ];
 
-  $label = "Documents Processed";
-  $info = ($indexed_count) ? $indexed_count : $engine_info['document_count'];
-  $rows[] = Common::deepCopy($row);
+  $rows[] = [
+    'label' => t('Documents Processed'),
+    'info' => ($indexed_count) ? $indexed_count : $engine_info['document_count']
+  ];
 
-  $label = "Documents Index";
-  $info = $engine_info['document_count'];
-  $rows[] = Common::deepCopy($row);
+  $rows[] = [
+    'label' => t('Documents Processed'),
+    'info' => ($indexed_count) ? $indexed_count : $engine_info['document_count']
+  ];
 
-  $failed = ($total_count - $engine_info['document_count']);
-  if ($failed) {
-    $label = "Failure Count";
-    $info = $failed;
-    $rows[] = Common::deepCopy($row);
-  }
+  $rows[] = [
+    'label' => t('Failure Count'),
+    'info' => ($total_count - $engine_info['document_count'])
+  ];
 
-  $label = t('Server');
-  $info = Link::fromTextAndUrl($engine->getServer(), $engine->getServerInstance()->toUrl('canonical'));
-  $rows[] = Common::deepCopy($row);
+  $rows[] = [
+    'label' => t('Server'),
+    'info' => Link::fromTextAndUrl($engine->getServer(), $engine->getServerInstance()->toUrl('canonical'))
+  ];
 
   // Add the indexing progr ess bar.
   $variables['index_progress'] = [
     '#theme' => 'progress_bar',
-    '#percent' => $total_count ? (int) (100 * $engine_info['document_count'] / $total_count) : 100,
-    '#message' => t('@indexed/@total indexed', ['@indexed' => $engine_info['document_count'], '@total' => $total_count]),
+    '#percent' => $total_count ? (int) (100 * $indexed_count / $total_count) : 100,
+    '#message' => t('@indexed/@total indexed', ['@indexed' => $indexed_count, '@total' => $total_count]),
   ];
 
   // Append the index info table to the output.
@@ -170,19 +164,20 @@ function template_preprocess_server(array &$variables) {
 
   foreach ($engines['results'] as $engine) {
     $is_sync = isset($engines_in_sync[$engine['name']]);
+
+    $sync_now_button = Link::fromTextAndUrl('Sync Now',
+      Url::fromRoute('entity.elastic_appsearch_engine.sync',
+        ['elastic_appsearch_engine' => $engine['name']]
+      )
+    );
+
     $rows[] = [
-      'name' => ($is_sync) ?
-      Link::fromTextAndUrl($engine['name'], $engines_in_sync[$engine['name']]->toUrl('canonical')) :
-      $engine['name'],
+      'name' => $engine['name'],
       'type' => $engine['type'],
       'count' => $engine['document_count'],
       'is_sync' => ($is_sync) ? 'Yes' : 'No',
       'datasources' => ($is_sync) ? implode(', ', $engines_in_sync[$engine['name']]->datasources()) : '',
-      'op' => (!$is_sync) ?
-      Link::fromTextAndUrl('Sync Now',
-        Url::fromRoute('entity.elastic_appsearch_engine.sync', ['elastic_appsearch_engine' => $engine['name']])
-      ) :
-      build_ajax_url($engine),
+      'op' => (!$is_sync) ? $sync_now_button : build_ajax_url($engine),
     ];
   }
   $variables['table'] = [
