@@ -11,7 +11,7 @@ use Drupal\elastic_appsearch\Utility\Database;
  *
  * @Block(
  *  id = "searchui_block",
- *  admin_label = @Translation("Search UI Block"),
+ *  admin_label = @Translation("AppSearch UI Block"),
  * )
  */
 class SearchUIBlock extends BlockBase {
@@ -34,7 +34,7 @@ class SearchUIBlock extends BlockBase {
       '#title' => $this->t('Select Search UI Settings'),
       '#description' => $this->t('Provide the search ui settings to be used to render react package.'),
       '#options' => $this->getSearchUISettings(),
-      '#default_value' => $this->configuration['searchui_settings'],
+      '#default_value' => (isset($this->configuration['searchui_settings']))?$this->configuration['searchui_settings']:'',
       '#size' => 5,
       '#weight' => '0',
     ];
@@ -99,7 +99,6 @@ class SearchUIBlock extends BlockBase {
     $reference_ui_config_name = $this->configuration['searchui_settings'];
 
     $data = NULL;
-    
     if(!empty($reference_ui_config_name)){
       $this->referenceui = \Drupal::entityTypeManager()
       ->getStorage('elastic_appsearch_referenceui')
