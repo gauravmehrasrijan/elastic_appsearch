@@ -68,7 +68,9 @@ export default function App() {
                   sideContent={
                     <div>
                       {getFacetFields().map(field => (
-                        <Facet key={field} field={field} label={getFacetsNiceName()[field]['label']} />
+                        
+                          <Facet key={field} field={field} label={getFacetsNiceName()[field]['label']} />
+                        
                       ))}
                     </div>
                   }
