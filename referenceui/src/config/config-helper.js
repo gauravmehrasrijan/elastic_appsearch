@@ -27,15 +27,6 @@ export function getConfig() {
   return {};
 }
 
-export function getFacetsNiceName() {
-  if (
-    typeof window !== "undefined" &&
-    window.eap_fields
-  ) {
-    return window.eap_fields;
-  }
-}
-
 function toLowerCase(string) {
   if (string) return string.toLowerCase();
 }
@@ -56,6 +47,10 @@ export function getUrlField() {
 
 export function getFacetFields() {
   return getConfig().facets || [];
+}
+
+export function getFacetDisjunctives() {
+  return getConfig().disjunctive || [];
 }
 
 export function getSortFields() {
@@ -138,7 +133,7 @@ export function buildSearchOptionsFromConfig() {
 
   const searchOptions = {};
   searchOptions.result_fields = resultFields;
-  searchOptions.search_fields = searchFields;
+  searchOptions.search_fields = searchFields;  
   return searchOptions;
 }
 
@@ -147,7 +142,7 @@ export function buildFacetConfigFromConfig() {
 
   const facets = (config.facets || []).reduce((acc, n) => {
     acc = acc || {};
-    acc[n] = {
+    acc[n.field] = {
       type: "value",
       size: 100
     };
@@ -159,8 +154,6 @@ export function buildFacetConfigFromConfig() {
 
 export function buildSortOptionsFromConfig() {
   const config = getConfig();
-  const eap_fields = (typeof window.eap_fields !== 'undefined') ? window.eap_fields : [];
-
   return [
     {
       name: "Relevance",
@@ -169,13 +162,13 @@ export function buildSortOptionsFromConfig() {
     },
     ...(config.sortFields || []).reduce((acc, sortField) => {
       acc.push({
-        name: `${eap_fields[sortField]['label']} ASC`,
-        value: sortField,
+        name: `${sortField.title} ASC`,
+        value: sortField.field,
         direction: "asc"
       });
       acc.push({
-        name: `${eap_fields[sortField]['label']} DESC`,
-        value: sortField,
+        name: `${sortField.title} DESC`,
+        value: sortField.field,
         direction: "desc"
       });
       return acc;

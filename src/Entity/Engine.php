@@ -38,6 +38,7 @@ use Drupal\elastic_appsearch\Utility\BatchHelper;
  *   },
  *   links = {
  *     "canonical" = "/admin/config/search/elastic-appsearch/engine/{elastic_appsearch_engine}",
+ *     "schema" = "/admin/config/search/elastic-appsearch/engine/{elastic_appsearch_engine}/schema",
  *     "sync" = "/admin/config/search/elastic-appsearch/engine/{elastic_appsearch_engine}/sync",
  *     "add-form" = "/admin/config/search/elastic-appsearch/engine/add",
  *     "edit-form" = "/admin/config/search/elastic-appsearch/engine/{elastic_appsearch_engine}/edit",
@@ -191,16 +192,17 @@ class Engine extends ConfigEntityBase implements EngineInterface {
   /**
    * {@inheritdoc}
    */
-  public function getEngineFields($keysonly=FALSE) {
+  public function getEngineFields($keysonly = FALSE) {
     $collection = [];
     if (!empty($this->schema)) {
       foreach ($this->schema as $schema) {
-        if($keysonly){
+        if ($keysonly) {
           $collection[] = $schema['field_id'];
-        }else{
+        }
+        else {
           $collection[$schema['field_id']] = $schema;
         }
-        
+
       }
     }
     return $collection;
