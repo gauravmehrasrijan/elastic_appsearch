@@ -127,7 +127,7 @@ class SearchUIBlock extends BlockBase {
           $data,
           Cache::PERMANENT,
           $this->referenceui->getCacheTags()
-              );
+        );
       }
     }
     return $data;
