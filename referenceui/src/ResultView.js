@@ -42,17 +42,33 @@ class RenderDate extends React.Component {
 class RenderImage extends React.Component {
 
   render() {
-
+    let image = "";
     const result = this.props.result;
     
     if(result.hasOwnProperty('field_article_thumbnail')){
-      console.log('setting state to ' + result.field_article_thumbnail.raw)
       if(result.field_article_thumbnail.raw !== ''){
-        return (
-          <span><img src={result.field_article_thumbnail.raw} /></span>
-        )
+        image = result.field_article_thumbnail.raw;
       }
     }
+
+    if(result.hasOwnProperty('field_event_image')){
+      if(result.field_event_image.raw !== ''){
+        image = result.field_event_image.raw;
+      }
+    }
+
+    if(result.hasOwnProperty('field_story_thumbnail')){
+      if(result.field_story_thumbnail.raw !== ''){
+        image = result.field_story_thumbnail.raw;
+      }
+    }
+
+    if(image){
+      return (
+        <span className="blog-img"><img src={image} /></span>
+      )
+    }
+
     return (null)
     
   }
@@ -75,13 +91,11 @@ export default ({ result }) => (
 
       <ul className="sui-result__details">
         <li>
-          <span
-            className="sui-result__value"
-            dangerouslySetInnerHTML={{
-              __html: result.body.raw.substring(0, 500)
-            }}
-          />
-          <RenderImage result={result}/>
+          <span className="sui-result__value" >
+            <RenderImage result={result}/>
+            { result.body.raw.substring(0, 500) }
+          </span>
+          
         </li>
         <li>
           <div className="sui-result__value">

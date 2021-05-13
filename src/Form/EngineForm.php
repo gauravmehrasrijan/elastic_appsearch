@@ -128,7 +128,9 @@ class EngineForm extends EntityForm {
     $server_collection = [];
 
     foreach ($servers as $key => $server) {
-      $server_collection[$key] = $server->label();
+      if($server->status() && $server->isAvailable()){
+        $server_collection[$key] = $server->label();
+      }
     }
 
     return $server_collection;

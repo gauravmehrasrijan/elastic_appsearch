@@ -528,6 +528,7 @@ html {
   background: unset; 
   margin-left: auto;
 }
+.blog-img{ width: auto; height: 200px; float: right; }
 .sui-layout-sidebar details { padding: 4px 0}
 .sui-layout-sidebar details[open] { color: #009dd2;}
 .sui-layout-sidebar summary { color: #46565e;font-weight: 700; text-transform: capitalize;}
@@ -723,6 +724,7 @@ html {
       margin: 0; }
 .sui-result__details {
     padding: 12px;
+    width: 100%;
     list-style: none;
     padding: 12px 24px; }
 .sui-results-container {

@@ -162,37 +162,44 @@ function template_preprocess_engine(array &$variables) {
  */
 function template_preprocess_server(array &$variables) {
   $server = $variables['server'];
-  $engines_in_sync = $server->getEngines();
-  $engines = $server->getClient()->listEngines();
 
-  $headers = [
-    'Engine ID',
-    'Type',
-    'Document Count',
-    'Is Sync',
-    'Datasources',
-    'Operations'
-  ];
-  $rows = [];
+  if($server->isAvailable()){
+    $engines_in_sync = $server->getEngines();
+    $engines = $server->getClient()->listEngines();
 
-  foreach ($engines['results'] as $engine) {
-    $is_sync = isset($engines_in_sync[$engine['name']]);
-
-    $sync_now_button = Link::fromTextAndUrl('Sync Now',
-      Url::fromRoute('entity.elastic_appsearch_engine.sync',
-        ['elastic_appsearch_engine' => $engine['name']]
-      )
-    );
-
-    $rows[] = [
-      'name' => $engine['name'],
-      'type' => $engine['type'],
-      'count' => $engine['document_count'],
-      'is_sync' => ($is_sync) ? 'Yes' : 'No',
-      'datasources' => ($is_sync) ? implode(', ', $engines_in_sync[$engine['name']]->datasources()) : '',
-      'op' => (!$is_sync) ? $sync_now_button : build_ajax_url($engine),
+    $headers = [
+      'Engine ID',
+      'Type',
+      'Document Count',
+      'Is Sync',
+      'Datasources',
+      'Operations'
     ];
+    $rows = [];
+
+    foreach ($engines['results'] as $engine) {
+      $is_sync = isset($engines_in_sync[$engine['name']]);
+
+      $sync_now_button = Link::fromTextAndUrl('Sync Now',
+        Url::fromRoute('entity.elastic_appsearch_engine.sync',
+          ['elastic_appsearch_engine' => $engine['name']]
+        )
+      );
+
+      $rows[] = [
+        'name' => $engine['name'],
+        'type' => $engine['type'],
+        'count' => $engine['document_count'],
+        'is_sync' => ($is_sync) ? 'Yes' : 'No',
+        'datasources' => ($is_sync) ? implode(', ', $engines_in_sync[$engine['name']]->datasources()) : '',
+        'op' => (!$is_sync) ? $sync_now_button : build_ajax_url($engine),
+      ];
+    }
+  }else{
+    $headers = ['Server Error'];
+    $rows[] = ['Server not reachable! Please verify the credentials'];
   }
+
   $variables['table'] = [
     '#theme' => 'table',
     '#header' => $headers,
@@ -200,8 +207,7 @@ function template_preprocess_server(array &$variables) {
     '#empty' => t('No Engine found on the server'),
     '#attached' => ['library' => ['core/drupal.dialog.ajax']]
   ];
-
-  // Return theme('table', array('header' => $headers, 'rows' => $rows));.
+  
 }
 
 /**
