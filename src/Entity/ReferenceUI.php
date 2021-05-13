@@ -111,7 +111,7 @@ class ReferenceUI extends ConfigEntityBase implements ReferenceUIInterface {
   }
 
   /**
-   *
+   * {@inheritdoc}
    */
   public function getEngineInstance() {
     return \Drupal::entityTypeManager()->getStorage('elastic_appsearch_engine')->load($this->getEngine());

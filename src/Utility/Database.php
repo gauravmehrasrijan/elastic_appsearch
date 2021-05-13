@@ -20,7 +20,7 @@ class Database {
     $query = \Drupal::database()->select('node_field_data', 'n')
       ->fields('n', ['nid'])
       ->condition('n.type', $datasources, 'IN')
-      ->condition('n.status',1, '=');
+      ->condition('n.status', 1, '=');
     return $query->countQuery()->execute()->fetchField();
   }
 
@@ -33,7 +33,7 @@ class Database {
     $query = \Drupal::database()->select('node_field_data', 'n')
       ->fields('n', ['type', 'nid', 'langcode'])
       ->condition('n.type', $datasources, 'IN')
-      ->condition('n.status',1, '=')
+      ->condition('n.status', 1, '=')
       ->execute();
 
     foreach ($query as $node) {
@@ -60,70 +60,80 @@ class Database {
     $node = Node::load($node_id);
     $response['id'] = $node_id;
     foreach ($node->getFields() as $name => $field) {
-     
-      if(isset($_fields[$name])){
+      if (isset($_fields[$name])) {
         $field_type = $node->get($name)->getFieldDefinition()->getType();
         static::mapFieldValues($node, $field_type, $name, $field, $response);
       }
-      
     }
     return $response;
   }
 
-  public static function mapFieldValues($node, $field_type, $name, $field, &$response){
-    switch($field_type) {
+  /**
+   * Map Field Values.
+   */
+  public static function mapFieldValues($node, $field_type, $name, $field, &$response) {
+    switch ($field_type) {
       case 'text_with_summary':
-        try{
+        try {
           $render_array = $node->$name->view('full');
           $rendered = \Drupal::service('renderer')->renderRoot($render_array);
-          if(is_object($rendered)){
+          if (is_object($rendered)) {
             $response[$name] = trim(strip_tags($rendered->__toString()));
-          }else{
+          }
+          else {
             $response[$name] = trim(strip_tags($field->getString()));
           }
-        }catch(\Exception $e){
+        }
+        catch (\Exception $e) {
           \Drupal::logger('elastic_appsearch')->notice('Failed to render HTML Body for node : ' . $node->id());
           \Drupal::logger('elastic_appsearch')->error($e->getMessage());
           $response[$name] = trim(strip_tags($field->getString()));
         }
-        
+
         break;
+
       case 'path':
         $path = explode(', ', $field->getString());
         $response[$name] = ($path[0]) ? $path[0] : '';
         break;
+
       case 'text':
-      case 'text_long': 
-        $response[$name]  = $field->getString();
+      case 'text_long':
+        $response[$name] = $field->getString();
         break;
+
       case 'entity_reference':
         self::setEntityReference($node, $field_type, $name, $field, $response);
         break;
+
       default:
-        $response[$name]  = $field->getString();
+        $response[$name] = $field->getString();
     }
   }
 
-  public static function setEntityReference($node, $field_type, $name, $field, &$response){
-    if($field->getFieldDefinition()->getSetting('target_type') == 'taxonomy_term'){
-      foreach($field->referencedEntities() as $entity_reference){
+  /**
+   * Set Entity Reference.
+   */
+  public static function setEntityReference($node, $field_type, $name, $field, &$response) {
+    if ($field->getFieldDefinition()->getSetting('target_type') == 'taxonomy_term') {
+      foreach ($field->referencedEntities() as $entity_reference) {
         $response[$name][] = $entity_reference->getName();
       }
     }
-    if($field->getFieldDefinition()->getSetting('target_type') == 'media'){
-      foreach($field->referencedEntities() as $entity_reference){
-        try{
+    if ($field->getFieldDefinition()->getSetting('target_type') == 'media') {
+      foreach ($field->referencedEntities() as $entity_reference) {
+        try {
           $target_id = $field->getString();
           $media = Media::load($target_id);
           $media_url = ImageStyle::load('medium')->buildUrl($media->image->entity->getFileUri());
           $response[$name] = $media_url;
         }
-        catch(\Exception $e){
-          //do nothing for now. will decide later
+        catch (\Exception $e) {
+          // Do nothing for now. will decide later.
         }
       }
     }
-    else{
+    else {
       $response[$name] = $field->getString();
     }
   }
@@ -146,7 +156,6 @@ class Database {
     if ($nodeIds = $result->fetchCol()) {
       return Node::loadMultiple($nodeIds);
     }
-
     return NULL;
   }
 

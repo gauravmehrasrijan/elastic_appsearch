@@ -134,8 +134,7 @@ class AppsearchForm extends ConfigFormBase {
       ->set('engine_name', $form_state->getValue('engine_name'))
       ->save();
 
-      $this->messenger()->addMessage($this->t('Connection to the endpoint is successfull using the provided key.'));
-      
+    $this->messenger()->addMessage($this->t('Connection to the endpoint is successfull using the provided key.'));
   }
 
 }
