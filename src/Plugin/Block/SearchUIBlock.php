@@ -33,7 +33,7 @@ class SearchUIBlock extends BlockBase {
       '#type' => 'select',
       '#title' => $this->t('Select Search UI Settings'),
       '#description' => $this->t('Provide the search ui settings to be used to render react package.'),
-      '#options' => $this->getSearchUISettings(),
+      '#options' => $this->getSearchUiSettings(),
       '#default_value' => (isset($this->configuration['searchui_settings'])) ? $this->configuration['searchui_settings'] : '',
       '#size' => 5,
       '#weight' => '0',
@@ -45,7 +45,7 @@ class SearchUIBlock extends BlockBase {
   /**
    * {@inheritdoc}
    */
-  public function getSearchUISettings() {
+  public function getSearchUiSettings() {
     $collection = [];
     $uis = \Drupal::entityTypeManager()->getStorage('elastic_appsearch_referenceui')->loadMultiple();
     foreach ($uis as $ui) {

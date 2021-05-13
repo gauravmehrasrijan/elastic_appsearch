@@ -132,7 +132,10 @@ function template_preprocess_engine(array &$variables) {
   $variables['index_progress'] = [
     '#theme' => 'progress_bar',
     '#percent' => $total_count ? (int) (100 * $indexed_count / $total_count) : 100,
-    '#message' => t('@indexed/@total indexed', ['@indexed' => $indexed_count, '@total' => $total_count]),
+    '#message' => t('@indexed/@total indexed', [
+      '@indexed' => $indexed_count,
+      '@total' => $total_count,
+    ]),
   ];
 
   // Append the index info table to the output.

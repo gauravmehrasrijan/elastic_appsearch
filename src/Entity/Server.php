@@ -131,7 +131,6 @@ class Server extends ConfigEntityBase implements ServerInterface {
     return $this->publicKey;
   }
 
-
   /**
    * {@inheritdoc}
    */
