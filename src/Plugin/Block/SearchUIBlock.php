@@ -49,14 +49,17 @@ class SearchUIBlock extends BlockBase {
     $collection = [];
     $uis = \Drupal::entityTypeManager()->getStorage('elastic_appsearch_referenceui')->loadMultiple();
     foreach ($uis as $ui) {
-      $server = $ui->getEngineInstance()->getServerInstance();
-      if ($server->status() && $server->isAvailable()) {
-        $collection[$ui->id()] = sprintf(
-          '%s -> %s -> %s',
-          ucwords($server->label()),
-          ucwords($ui->getEngine()),
-          $ui->label()
-        );
+      $engine = $ui->getEngineInstance();
+      if($engine){
+        $server = $engine->getServerInstance();
+        if ($server->status() && $server->isAvailable()) {
+          $collection[$ui->id()] = sprintf(
+            '%s -> %s -> %s',
+            ucwords($server->label()),
+            ucwords($ui->getEngine()),
+            $ui->label()
+          );
+        }
       }
     }
 

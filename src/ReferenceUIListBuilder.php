@@ -16,7 +16,7 @@ class ReferenceUIListBuilder extends ConfigEntityListBuilder {
   public function buildHeader() {
     $header['label'] = $this->t('Search ui');
     $header['id'] = $this->t('Machine name');
-    // $header['server'] = $this->t('Server');
+    $header['server'] = $this->t('Server');
     $header['engine'] = $this->t('Engine');
     return $header + parent::buildHeader();
   }
@@ -26,9 +26,17 @@ class ReferenceUIListBuilder extends ConfigEntityListBuilder {
    */
   public function buildRow(EntityInterface $entity) {
 
+    $servername = "";
+    $engine = $entity->getEngineInstance();
+    if($engine){
+      $server = $engine->getServerInstance();
+      if($server){
+        $servername = $server->label();
+      }
+    }
     $row['label'] = $entity->label();
     $row['id'] = $entity->id();
-    // $row['server'] = $entity->getEngineInstance()->getServerInstance()->label();
+    $row['server'] = $servername;
     $row['engine'] = $entity->getEngine();
     // You probably want a few more properties here...
     return $row + parent::buildRow($entity);
