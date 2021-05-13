@@ -76,9 +76,9 @@ function template_preprocess_engine(array &$variables) {
   $tracker = $engine->getTrackerInstance();
   $indexed_count = $tracker->getIndexedItemsCount();
   $total_count = $tracker->getTotalItemsCount();
-  
+
   $rows = [];
-  
+
   $rows[] = [
     'label' => t('Engine'),
     'info' => Link::fromTextAndUrl($engine->id(), $engine->toUrl('edit-form'))
@@ -88,7 +88,6 @@ function template_preprocess_engine(array &$variables) {
     'label' => t('Status'),
     'info' => $engine->status() ? "Enabled" : "Disabled"
   ];
-
 
   $rows[] = [
     'label' => t('Total Documents'),
@@ -113,6 +112,20 @@ function template_preprocess_engine(array &$variables) {
   $rows[] = [
     'label' => t('Server'),
     'info' => Link::fromTextAndUrl($engine->getServer(), $engine->getServerInstance()->toUrl('canonical'))
+  ];
+
+  $rows[] = [
+    'label' => t('Schema'),
+    'info' => Link::fromTextAndUrl('Edit Schema', $engine->toUrl('schema'))
+  ];
+
+  $url = Url::fromRoute(
+    'entity.elastic_appsearch_referenceui.collection',
+    ['elastic_appsearch_engine' => $engine->id()]
+  );
+  $rows[] = [
+    'label' => t('Search UI'),
+    'info' => Link::fromTextAndUrl('View Search UI', $url)
   ];
 
   // Add the indexing progr ess bar.

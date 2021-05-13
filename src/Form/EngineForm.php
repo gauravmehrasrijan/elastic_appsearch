@@ -150,14 +150,16 @@ class EngineForm extends EntityForm {
         $this->messenger()->addMessage($this->t('Created the %label Engine.', [
           '%label' => $engine->label(),
         ]));
+        $redirect = $engine->toUrl('schema');
         break;
 
       default:
         $this->messenger()->addMessage($this->t('Saved the %label Engine.', [
           '%label' => $engine->label(),
         ]));
+        $engine->toUrl('canonical');
     }
-    $form_state->setRedirectUrl($engine->toUrl('canonical'));
+    $form_state->setRedirectUrl($redirect);
   }
 
 }

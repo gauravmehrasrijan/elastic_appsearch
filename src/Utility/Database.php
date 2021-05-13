@@ -4,6 +4,9 @@ namespace Drupal\elastic_appsearch\Utility;
 
 use Drupal\node\Entity\Node;
 use Drupal\elastic_appsearch\Utility\Common;
+use Drupal\media\Entity\Media;
+use Drupal\file\Entity\File;
+use Drupal\image\Entity\ImageStyle;
 
 /**
  * {@inheritdoc}
@@ -57,6 +60,7 @@ class Database {
     $node = Node::load($node_id);
     $response['id'] = $node_id;
     foreach ($node->getFields() as $name => $field) {
+     
       if(isset($_fields[$name])){
         $field_type = $node->get($name)->getFieldDefinition()->getType();
         static::mapFieldValues($node, $field_type, $name, $field, $response);
@@ -93,16 +97,34 @@ class Database {
         $response[$name]  = $field->getString();
         break;
       case 'entity_reference':
-        if($field->getFieldDefinition()->getSetting('target_type') == 'taxonomy_term'){
-          foreach($field->referencedEntities() as $entity_reference){
-            $response[$name][] = $entity_reference->getName();
-          }
-        }else{
-          $response[$name] = $field->getString();
-        }
+        self::setEntityReference($node, $field_type, $name, $field, $response);
         break;
       default:
         $response[$name]  = $field->getString();
+    }
+  }
+
+  public static function setEntityReference($node, $field_type, $name, $field, &$response){
+    if($field->getFieldDefinition()->getSetting('target_type') == 'taxonomy_term'){
+      foreach($field->referencedEntities() as $entity_reference){
+        $response[$name][] = $entity_reference->getName();
+      }
+    }
+    if($field->getFieldDefinition()->getSetting('target_type') == 'media'){
+      foreach($field->referencedEntities() as $entity_reference){
+        try{
+          $target_id = $field->getString();
+          $media = Media::load($target_id);
+          $media_url = ImageStyle::load('medium')->buildUrl($media->image->entity->getFileUri());
+          $response[$name] = $media_url;
+        }
+        catch(\Exception $e){
+          //do nothing for now. will decide later
+        }
+      }
+    }
+    else{
+      $response[$name] = $field->getString();
     }
   }
 

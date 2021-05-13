@@ -83,6 +83,20 @@ class ReferenceUI extends ConfigEntityBase implements ReferenceUIInterface {
   protected $fields_filter;
 
   /**
+   * The Search searchable field filters.
+   *
+   * @var sequence
+   */
+  protected $fields_filter_searchable;
+
+  /**
+   * The Search ui field filters.
+   *
+   * @var sequence
+   */
+  protected $fields_filter_disjunctive;
+
+  /**
    * The Search ui fields sort.
    *
    * @var sequence
@@ -96,7 +110,10 @@ class ReferenceUI extends ConfigEntityBase implements ReferenceUIInterface {
     return $this->engine;
   }
 
-  public function getEngineInstance(){
+  /**
+   *
+   */
+  public function getEngineInstance() {
     return \Drupal::entityTypeManager()->getStorage('elastic_appsearch_engine')->load($this->getEngine());
   }
 
@@ -126,6 +143,20 @@ class ReferenceUI extends ConfigEntityBase implements ReferenceUIInterface {
    */
   public function getFieldsSort() {
     return $this->fields_sort;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFieldsFilterSearchable() {
+    return $this->fields_filter_searchable;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFieldsFilterDisjunctive() {
+    return $this->fields_filter_disjunctive;
   }
 
 }

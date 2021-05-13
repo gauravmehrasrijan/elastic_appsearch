@@ -154,6 +154,8 @@ class FieldSchemaForm extends EntityForm {
 
     $types = $this->entity->supportedtypes();
     $_fields = $this->entity->getEngineFields();
+    $engine_fields = $this->entity->getEngineFields();
+
     $build = [
       '#type' => 'details',
       '#open' => TRUE,
@@ -174,11 +176,15 @@ class FieldSchemaForm extends EntityForm {
     ksort($fields);
 
     foreach ($fields as $key => $field) {
+
+      $title = (!empty($engine_fields) && isset($engine_fields[$key])) ?
+        $engine_fields[$key]['label'] : $field['field']->getLabel();
+
       $build['fields'][$key]['title'] = [
         '#type' => 'textfield',
-        '#default_value' => $field['field']->getLabel() ?: $key,
+        '#default_value' => $title,
         '#required' => TRUE,
-        '#attributes' => ['readonly' => 'readonly'],
+        // '#attributes' => ['readonly' => 'readonly'],
         '#size' => 40,
       ];
       $build['fields'][$key]['id'] = [

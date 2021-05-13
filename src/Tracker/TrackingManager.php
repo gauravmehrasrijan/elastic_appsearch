@@ -71,8 +71,12 @@ class TrackingManager {
 
     $engines = \Drupal::entityTypeManager()->getStorage('elastic_appsearch_engine')->loadMultiple();
     foreach ($engines as $engine) {
+      $server = $engine->getServerInstance();
+
       if (
-        !$engine->datasources()
+        !$server->status()
+        || !$server->isAvailable()
+        || !$engine->datasources()
         || (!in_array($node_type, $engine->datasources())
         || !$engine->status() || !$engine->info()
       )) {

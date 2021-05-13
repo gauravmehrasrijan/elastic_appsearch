@@ -49,12 +49,24 @@ class ReferenceUIForm extends EntityForm {
       '#ajax' => [
         'callback' => [$this, 'updateSchema'],
         'event' => 'change',
-        'wrapper' => 'form_schema',
+        'wrapper' => 'form_settings',
       ],
     ];
+
+    $form['settings'] = [
+      '#type' => 'fieldset',
+      '#title' => t('General Settings'),
+    // Added.
+      '#collapsible' => TRUE,
+    // Added.
+      '#collapsed' => TRUE,
+      '#prefix' => '<div id="form_settings">',
+      '#suffix' => '</div>',
+    ];
+
     $engine_value = (!empty($form_state->getValue('engine'))) ? $form_state->getValue('engine') : $elastic_appsearch_referenceui->getEngine();
 
-    $form['field_title'] = [
+    $form['settings']['field_title'] = [
       '#type' => 'select',
       '#title' => $this->t('Select Title'),
       '#maxlength' => 255,
@@ -66,7 +78,7 @@ class ReferenceUIForm extends EntityForm {
       '#suffix' => '</div>',
     ];
 
-    $form['fields_filter'] = [
+    $form['settings']['fields_filter'] = [
       '#type' => 'select',
       '#title' => $this->t('Select Filter Fields'),
       '#multiple' => TRUE,
@@ -79,9 +91,43 @@ class ReferenceUIForm extends EntityForm {
       '#attributes' => [
         'style' => 'width: 50em;'
       ],
+      '#ajax' => [
+        'callback' => [$this, 'updateFilters'],
+        'event' => 'change',
+        'wrapper' => 'form_searchable_fields',
+      ],
     ];
 
-    $form['fields_sort'] = [
+    $fields_selected = (!empty($form_state->getValue('fields_filter'))) ?
+      $form_state->getValue('fields_filter') : $elastic_appsearch_referenceui->getFieldsFilter();
+
+    $defaults = $elastic_appsearch_referenceui->getFieldsFilterSearchable();
+
+    $available_searchable_fields = $this->getSearchableSelected($fields_selected, $engine_value);
+
+    $form['settings']['extra']['fields_filter_disjunctive'] = [
+      '#type' => 'checkboxes',
+      '#title' => $this->t('Select fileters that are disjunctive in nature.'),
+      '#options' => $available_searchable_fields,
+      '#default_value' => ($defaults) ? $defaults : [],
+      '#description' => $this->t("This will enable filtering for multiple values within selected facets independently"),
+      '#required' => FALSE,
+      '#prefix' => '<div id="form_searchable_fields">'
+    ];
+
+    $defaults_disjunctives = $elastic_appsearch_referenceui->getFieldsFilterDisjunctive();
+
+    $form['settings']['extra']['fields_filter_searchable'] = [
+      '#type' => 'checkboxes',
+      '#title' => $this->t('Select fields to enable facet field search.'),
+      '#options' => $available_searchable_fields,
+      '#default_value' => ($defaults_disjunctives) ? $defaults_disjunctives : [],
+      '#description' => $this->t("Faceted values rendered as filters and available as query refinement"),
+      '#required' => FALSE,
+      '#suffix' => '</div>'
+    ];
+
+    $form['settings']['fields_sort'] = [
       '#type' => 'select',
       '#title' => $this->t('Select Sort Fields'),
       '#multiple' => TRUE,
@@ -96,7 +142,7 @@ class ReferenceUIForm extends EntityForm {
       ],
     ];
 
-    $form['field_url'] = [
+    $form['settings']['field_url'] = [
       '#type' => 'select',
       '#title' => $this->t('Select Url Field'),
       '#options' => $this->getEngineSchema($engine_value),
@@ -121,21 +167,34 @@ class ReferenceUIForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
+  public function getSearchableSelected($options, $engine_name) {
+    $fields = $this->getEngineSchema($engine_name);
+    foreach ($fields as $key => $value) {
+      if (!in_array($key, $options)) {
+        unset($fields[$key]);
+      }
+    }
+    return $fields;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function updateSchema($form, &$form_state) {
 
-    $renderer = \Drupal::service('renderer');
-    $title = $renderer->render($form['field_title']);
-    $filter = $renderer->render($form['fields_filter']);
-    $sort = $renderer->render($form['fields_sort']);
-    $url = $renderer->render($form['field_url']);
+    // Just return redendered settings.
+    return $form['settings'];
 
-    $response = new AjaxResponse();
-    $response->addCommand(new ReplaceCommand('#form_schema_title', $title));
-    $response->addCommand(new ReplaceCommand('#form_schema_filter', $filter));
-    $response->addCommand(new ReplaceCommand('#form_schema_sort', $sort));
-    $response->addCommand(new ReplaceCommand('#form_schema_url', $url));
+  }
 
-    return $response;
+  /**
+   * {@inheritdoc}
+   */
+  public function updateFilters($form, &$form_state) {
+
+    // Just return redendered settings fields_filter_searchable.
+    return $form['settings']['extra'];
+
   }
 
   /**
@@ -172,11 +231,12 @@ class ReferenceUIForm extends EntityForm {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
+
     $elastic_appsearch_referenceui = $this->entity;
 
     $status = $elastic_appsearch_referenceui->save();
     $cid = $elastic_appsearch_referenceui->id() . $elastic_appsearch_referenceui->getEngine();
-    \Drupal::cache()->set($cid, null);
+    \Drupal::cache()->set($cid, NULL);
     switch ($status) {
       case SAVED_NEW:
         $this->messenger()->addMessage($this->t('Created the %label Search ui.', [
@@ -201,7 +261,10 @@ class ReferenceUIForm extends EntityForm {
     $engine_collection = [];
 
     foreach ($engines as $key => $engine) {
-      $engine_collection[$key] = $engine->label();
+      $server = $engine->getServerInstance();
+      if ($server->status() && $server->isAvailable()) {
+        $engine_collection[$key] = $server->label() . '::' . $engine->label();
+      }
     }
 
     return $engine_collection;

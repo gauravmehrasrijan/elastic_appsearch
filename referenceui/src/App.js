@@ -21,7 +21,7 @@ import {
   buildSortOptionsFromConfig,
   getConfig,
   getFacetFields,
-  getFacetsNiceName
+  getFacetDisjunctives,
 } from "./config/config-helper";
 import ResultView from "./ResultView";
 
@@ -34,6 +34,7 @@ const connector = new AppSearchAPIConnector({
 });
 const config = {
   searchQuery: {
+    disjunctiveFacets: getFacetDisjunctives(),
     facets: buildFacetConfigFromConfig(),
     ...buildSearchOptionsFromConfig()
   },
@@ -41,8 +42,6 @@ const config = {
   apiConnector: connector,
   alwaysSearchOnInitialLoad: true
 };
-
-const eap_fields = JSON.parse('{"body":{"label":"Body","field_id":"body","type":"text"},"changed":{"label":"Changed","field_id":"changed","type":"text"},"created":{"label":"Authored on","field_id":"created","type":"text"},"field_article_type":{"label":"Article Source","field_id":"field_article_type","type":"text"},"field_blog_section":{"label":"Section","field_id":"field_blog_section","type":"text"},"field_blog_topic":{"label":"Blog Topic","field_id":"field_blog_topic","type":"text"},"field_tax_article_type":{"label":"Article Type","field_id":"field_tax_article_type","type":"text"},"field_tax_content_format":{"label":"Content Format","field_id":"field_tax_content_format","type":"text"},"field_tax_disease":{"label":"Disease","field_id":"field_tax_disease","type":"text"},"field_tax_event_type":{"label":"Event Type","field_id":"field_tax_event_type","type":"text"},"field_tax_ga_type":{"label":"Grant Award Type","field_id":"field_tax_ga_type","type":"text"},"field_tax_research_type":{"label":"Research Type","field_id":"field_tax_research_type","type":"text"},"field_tax_topic":{"label":"Topic","field_id":"field_tax_topic","type":"text"},"path":{"label":"URL alias","field_id":"path","type":"text"},"status":{"label":"Published","field_id":"status","type":"text"},"title":{"label":"Title","field_id":"title","type":"text"},"type":{"label":"Content type","field_id":"type","type":"text"}}')
 
 export default function App() {
   return (
@@ -68,9 +67,13 @@ export default function App() {
                   sideContent={
                     <div>
                       {getFacetFields().map(field => (
-                        
-                          <Facet key={field} field={field} label={getFacetsNiceName()[field]['label']} />
-                        
+                        <Facet 
+                          filterType="any"
+                          isFilterable={field.isFilterable}
+                          key={field.field}
+                          field={field.field}
+                          label={field.title} 
+                        />
                       ))}
                     </div>
                   }

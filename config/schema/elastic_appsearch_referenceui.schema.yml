@@ -25,7 +25,15 @@ elastic_appsearch.elastic_appsearch_referenceui.*:
     fields_filter:
       type: sequence
       label: 'Faceted values rendered as filters and available as query refinement.'
-      
+
+    fields_filter_searchable:
+      type: sequence
+      label: 'Enable Faceted field filtering.'
+
+    fields_filter_disjunctive:
+      type: sequence
+      label: 'Enable Disjunctive Faceted searching.'
+
     fields_sort:
       type: sequence
       label: 'Used to display result sorting options, ascending and descending.'
