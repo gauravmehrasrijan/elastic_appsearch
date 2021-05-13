@@ -39,6 +39,29 @@ class RenderDate extends React.Component {
   }
 }
 
+class RenderImage extends React.Component {
+
+  render() {
+
+    const result = this.props.result;
+    const type = result.type.raw;    
+
+    if(type === 'article'){
+      console.log(result);
+      if(result.hasOwnProperty('field_article_thumbnail')){
+        console.log('setting state to ' + result.field_article_thumbnail.raw)
+        if(result.field_article_thumbnail.raw !== ''){
+          return (
+            <span><img src={result.field_article_thumbnail.raw} /></span>
+          )
+        }
+      }
+    }
+    return (null)
+    
+  }
+}
+
 export default ({ result }) => (
   <li className="sui-result">
     <div className="sui-result__header">
@@ -62,6 +85,7 @@ export default ({ result }) => (
               __html: result.body.raw.substring(0, 500)
             }}
           />
+          <RenderImage result={result}/>
         </li>
         <li>
           <div className="sui-result__value">

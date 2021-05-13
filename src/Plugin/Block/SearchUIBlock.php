@@ -114,7 +114,7 @@ class SearchUIBlock extends BlockBase {
       $cid = $this->referenceui->id() . $this->referenceui->getEngine();
       $cache = \Drupal::cache()->get($cid);
       // Load from cache if available.
-      if ($cache->data !== NULL) {
+      if (isset($cache->data) && $cache->data !== NULL) {
         $data = $cache->data;
       }
       else {
