@@ -74,16 +74,25 @@ class RenderImage extends React.Component {
   }
 }
 
+class RenderTitle extends React.Component{
+  render(){
+    const result = this.props.result;
+    let title = result.title.snippet.includes('<em>') ? result.title.snippet: result.title.raw;
+    return (
+      <span className="sui-result__title"
+        dangerouslySetInnerHTML={{ __html: title }}
+      />
+    )
+  }
+}
+
 export default ({ result }) => (
-  <li className="sui-result">
+  <li className={`sui-result searchDiv sui-${result.type.raw} ${ (result.hasOwnProperty('field_is_event_online') && result.field_is_event_online.raw) ? 'sui-event-online' : 'off'  }`
+    
+    }>
     <div className="sui-result__header">
       <a href={result.path.raw}>
-        <span
-          className="sui-result__title"
-          // Snippeted results contain search term highlights with html and are
-          // 100% safe and santitized, so we dangerously set them here
-          dangerouslySetInnerHTML={{ __html: result.title.snippet }}
-        />
+        <RenderTitle result={result} />
       </a>
     </div>
 
@@ -103,8 +112,6 @@ export default ({ result }) => (
           </div>
         </li>
       </ul>
-      
     </div>
-
   </li>
 );

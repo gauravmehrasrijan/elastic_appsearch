@@ -83,7 +83,14 @@ function elastic_appsearch_node_insert($node) {
  * Implements hook_node_update().
  */
 function elastic_appsearch_node_update($node) {
-  \Drupal::service('elastic_appsearch.entity.tracking_manager')->trackerUpdateNode($node);
+
+  if ($node->original->status->getString() === "1" && $node->status->getString() !== "1") {
+    \Drupal::service('elastic_appsearch.entity.tracking_manager')->trackerDeleteNode($node);
+  }
+  
+  if($node->status->getString() === "1"){
+    \Drupal::service('elastic_appsearch.entity.tracking_manager')->trackerUpdateNode($node);
+  }
 }
 
 /**
