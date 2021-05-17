@@ -28,9 +28,9 @@ class ReferenceUIListBuilder extends ConfigEntityListBuilder {
 
     $servername = "";
     $engine = $entity->getEngineInstance();
-    if($engine){
+    if ($engine) {
       $server = $engine->getServerInstance();
-      if($server){
+      if ($server) {
         $servername = $server->label();
       }
     }

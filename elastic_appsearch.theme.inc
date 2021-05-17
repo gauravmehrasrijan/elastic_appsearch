@@ -163,7 +163,7 @@ function template_preprocess_engine(array &$variables) {
 function template_preprocess_server(array &$variables) {
   $server = $variables['server'];
 
-  if($server->isAvailable()){
+  if ($server->isAvailable()) {
     $engines_in_sync = $server->getEngines();
     $engines = $server->getClient()->listEngines();
 
@@ -195,7 +195,8 @@ function template_preprocess_server(array &$variables) {
         'op' => (!$is_sync) ? $sync_now_button : build_ajax_url($engine),
       ];
     }
-  }else{
+  }
+  else {
     $headers = ['Server Error'];
     $rows[] = ['Server not reachable! Please verify the credentials'];
   }
@@ -207,7 +208,7 @@ function template_preprocess_server(array &$variables) {
     '#empty' => t('No Engine found on the server'),
     '#attached' => ['library' => ['core/drupal.dialog.ajax']]
   ];
-  
+
 }
 
 /**

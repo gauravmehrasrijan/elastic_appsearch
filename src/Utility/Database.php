@@ -120,7 +120,7 @@ class Database {
         $response[$name][] = $entity_reference->getName();
       }
     }
-    else if ($field->getFieldDefinition()->getSetting('target_type') == 'media') {
+    elseif ($field->getFieldDefinition()->getSetting('target_type') == 'media') {
       foreach ($field->referencedEntities() as $entity_reference) {
         try {
           $target_id = $field->getString();

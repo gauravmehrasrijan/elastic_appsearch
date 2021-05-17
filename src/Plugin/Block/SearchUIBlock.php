@@ -50,7 +50,7 @@ class SearchUIBlock extends BlockBase {
     $uis = \Drupal::entityTypeManager()->getStorage('elastic_appsearch_referenceui')->loadMultiple();
     foreach ($uis as $ui) {
       $engine = $ui->getEngineInstance();
-      if($engine){
+      if ($engine) {
         $server = $engine->getServerInstance();
         if ($server->status() && $server->isAvailable()) {
           $collection[$ui->id()] = sprintf(
