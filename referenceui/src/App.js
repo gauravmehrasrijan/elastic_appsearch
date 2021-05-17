@@ -57,10 +57,13 @@ export default function App() {
                     <SearchBox autocompleteSuggestions={true} />
                     <div>
                       {wasSearched && (
+                        <div>
                           <Sorting
                             sortOptions={buildSortOptionsFromConfig()}
                           />
+                          </div>
                         )}
+                        
                     </div>
                   </div>
                 }

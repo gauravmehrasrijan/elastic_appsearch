@@ -65,7 +65,7 @@ class RenderImage extends React.Component {
 
     if(image){
       return (
-        <span className="blog-img"><img src={image} /></span>
+        <span className="blog-img"><img height="220px" width="220px" alt={image} src={image} /></span>
       )
     }
 
