@@ -86,10 +86,39 @@ class RenderTitle extends React.Component{
   }
 }
 
+class AddIcon extends React.Component{
+  render(){
+    let useTag = '';
+    const result = this.props.result;
+    if(result.hasOwnProperty('type')){
+      if(result.type.raw === 'article'){
+        useTag = '<use xlink:href="/themes/custom/particle/dist/app-drupal/assets/spritemap.svg?cacheBuster=#sprite-news"/>';
+      }
+
+      if(result.type.raw === 'event' && result.hasOwnProperty('field_is_event_online')){
+        
+        if(result.field_is_event_online.raw === "0"){
+          useTag = '<use xlink:href="/themes/custom/particle/dist/app-drupal/assets/spritemap.svg?cacheBuster=#sprite-location-pin" />';
+        }else{
+          useTag = '<use xlink:href="/themes/custom/particle/dist/app-drupal/assets/spritemap.svg?cacheBuster=#sprite-online-meeting"/>';
+        }
+      }
+    }
+   
+
+    return(
+      <div className="svgicon-default">
+        <svg viewBox="0 0 20 20" dangerouslySetInnerHTML={{__html: useTag }} />
+      </div>
+    )
+  }
+}
+
 export default ({ result }) => (
   <li className={`sui-result searchDiv sui-${result.type.raw} ${ (result.hasOwnProperty('field_is_event_online') && result.field_is_event_online.raw) ? 'sui-event-online' : 'off'  }`
     
     }>
+    <AddIcon result={result} />
     <div className="sui-result__header">
       <a href={result.path.raw}>
         <RenderTitle result={result} />

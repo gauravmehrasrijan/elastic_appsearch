@@ -54,7 +54,9 @@ export default function App() {
                 <Layout
                   header={
                   <div className="sui__header-wrapper">
-                    <SearchBox autocompleteSuggestions={true} />
+                    <div className="flex-wrap flex-lg-nowrap">
+                      <SearchBox autocompleteSuggestions={true} />
+                    </div>
                     <div>
                       {wasSearched && (
                         <div>

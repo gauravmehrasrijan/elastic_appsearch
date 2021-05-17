@@ -329,6 +329,7 @@ html {
   display: flex;
   flex-direction: column;
 }
+.svgicon-default{ position: absolute; top: 30px; left: 2px;}
 /**
  * Header / Searchbox
  */
@@ -499,7 +500,6 @@ html {
 .article__search-button {
   width: 191px;
   padding: 1px;
-  margin-left: 10px;
 }
 
 .sui-layout-main-body {
@@ -751,6 +751,7 @@ html {
   box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.1);
   overflow-wrap: break-word;
   overflow: hidden;
+  position: relative;
 }
 .sui-result + .sui-result {
   margin-top: 32px;
@@ -854,7 +855,6 @@ html {
 .sui-search-box {
   display: flex;
   position: relative;
-  justify-content: center;
   align-items: stretch;
 }
 .sui-search-box__submit {
@@ -887,23 +887,6 @@ html {
   align-items: stretch;
   border-radius: 3px;
   position: relative;
-}
-.sui-search-box__text-input {
-  border-radius: 4px;
-  border: 1px solid #ccc;
-  padding: 16px;
-  outline: none;
-  position: relative;
-  font-family: inherit;
-  font-size: 14px;
-  width: 100%;
-}
-.sui-search-box__text-input:focus {
-  box-shadow: rgba(59, 69, 79, 0.3) 0px 2px 4px;
-  border-top: 1px solid #3a56e4;
-  border-left: 1px solid #3a56e4;
-  border-right: 1px solid #3a56e4;
-  border-bottom: 1px solid #3a56e4;
 }
 .autocomplete .sui-search-box__text-input {
   box-shadow: rgba(59, 69, 79, 0.3) 0px 2px 4px;
