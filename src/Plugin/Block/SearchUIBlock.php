@@ -89,7 +89,7 @@ class SearchUIBlock extends BlockBase {
 
     $inlinejs = '';
     $inlinejs = "var appConfig =  JSON.parse('" . json_encode($engine_data['json']) . "');";
-
+    $inlinejs .= 'setTimeout(function(){jQuery(".rc-pagination-item a").click(function(){jQuery("html, body").animate({scrollTop:0},1e3,"swing")})},5e3);';
     $build['#attached']['html_head'][] = [
       [
         '#tag' => 'script',
