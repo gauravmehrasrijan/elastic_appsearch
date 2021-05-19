@@ -28,7 +28,6 @@ class SearchUIBlock extends BlockBase {
    * {@inheritdoc}
    */
   public function blockForm($form, FormStateInterface $form_state) {
-
     $form['searchui_settings'] = [
       '#type' => 'select',
       '#title' => $this->t('Select Search UI Settings'),
@@ -38,7 +37,6 @@ class SearchUIBlock extends BlockBase {
       '#size' => 5,
       '#weight' => '0',
     ];
-
     return $form;
   }
 
@@ -62,7 +60,6 @@ class SearchUIBlock extends BlockBase {
         }
       }
     }
-
     return $collection;
   }
 
@@ -77,16 +74,23 @@ class SearchUIBlock extends BlockBase {
    * {@inheritdoc}
    */
   public function build() {
-
-    $engine_data = $this->buildEngineJson();
+    $seachui_settings = '';
+    $config = $this->getConfiguration();
+    $block = (isset($config['block_attr'])) ? $config['block_attr'] : NULL;
+    if ($block) {
+      $seachui_settings = $config['block_attr']->get('field_select_search_ui_settings')->getValue()[0]['value'];
+    }
+    else {
+      $seachui_settings = $this->configuration['searchui_settings'];
+    }
+    $engine_data = $this->buildEngineJson($seachui_settings);
     $build = [];
     $build['#theme'] = 'searchui_block';
-    $build['#content'][] = $this->configuration['searchui_settings'];
+    $build['#content'][] = $seachui_settings;
     $build['#engine'] = $engine_data['json'];
     $build['#attached']['library'] = [
       'elastic_appsearch/elastic_appsearch-library',
     ];
-
     $inlinejs = '';
     $inlinejs = "var appConfig =  JSON.parse('" . json_encode($engine_data['json']) . "');";
     $inlinejs .= 'setTimeout(function(){jQuery(".rc-pagination-item a").click(function(){jQuery("html, body").animate({scrollTop:0},1e3,"swing")})},5e3);';
@@ -104,16 +108,12 @@ class SearchUIBlock extends BlockBase {
   /**
    * {@inheritdoc}
    */
-  public function buildEngineJson() {
-
-    $reference_ui_config_name = $this->configuration['searchui_settings'];
-
+  public function buildEngineJson($reference_ui_config_name) {
     $data = NULL;
     if (!empty($reference_ui_config_name)) {
       $this->referenceui = \Drupal::entityTypeManager()
         ->getStorage('elastic_appsearch_referenceui')
         ->load($reference_ui_config_name);
-
       $cid = $this->referenceui->id() . $this->referenceui->getEngine();
       $cache = \Drupal::cache()->get($cid);
       // Load from cache if available.
@@ -140,19 +140,16 @@ class SearchUIBlock extends BlockBase {
    * {@inheritdoc}
    */
   public function renderEngineJson() {
-
     $engine_fields = $this->engine->getEngineFields();
     $field_facets = $field_sort = [];
     $sorts = $this->referenceui->getFieldsSort();
     $searchables = $this->referenceui->getFieldsFilterSearchable();
-
     foreach ($sorts as $sort) {
       $field_sort[] = [
         'title' => $engine_fields[$sort]['label'],
         'field' => $sort
       ];
     }
-
     $facets = $this->referenceui->getFieldsFilter();
     foreach ($facets as $facet) {
       $field_facets[] = [
@@ -161,9 +158,7 @@ class SearchUIBlock extends BlockBase {
         'isFilterable' => (array_key_exists($facet, $searchables) && $searchables[$facet] != '0') ? TRUE : FALSE
       ];
     }
-
     $disjunctives = $this->referenceui->getFieldsFilterDisjunctive();
-
     return [
       'json' => [
         'engineName' => $this->engine->id(),
