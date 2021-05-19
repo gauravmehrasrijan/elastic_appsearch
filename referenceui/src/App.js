@@ -40,7 +40,7 @@ const config = {
   },
   autocompleteQuery: buildAutocompleteQueryConfig(),
   apiConnector: connector,
-  alwaysSearchOnInitialLoad: true
+  alwaysSearchOnInitialLoad: false
 };
 
 export default function App() {
