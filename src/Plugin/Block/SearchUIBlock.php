@@ -141,6 +141,7 @@ class SearchUIBlock extends BlockBase {
    */
   public function renderEngineJson() {
     $engine_fields = $this->engine->getEngineFields();
+    $engine_fields_key = $this->engine->getEngineFields(TRUE);
     $field_facets = $field_sort = [];
     $sorts = $this->referenceui->getFieldsSort();
     $searchables = $this->referenceui->getFieldsFilterSearchable();
@@ -164,7 +165,7 @@ class SearchUIBlock extends BlockBase {
         'engineName' => $this->engine->id(),
         'endpointBase' => $this->server->getHost(),
         'searchKey' => $this->server->getPublicKey(),
-        'resultFields' => $this->engine->getEngineFields(TRUE),
+        'resultFields' => array_merge($engine_fields_key, ['body_summary']),
         'sortFields' => $field_sort,
         'facets' => $field_facets,
         'disjunctive' => array_keys($disjunctives),

@@ -5,12 +5,12 @@ class RenderDate extends React.Component {
   render() {
     let result = this.props.result;
     const type = result.type.raw;
-    const month = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dev'];
+    const month = ['January','February','March','April','May','June','July','August','September','October','November','December'];
     let date = null;
     let formatted = '';
     let location = '';
 
-    if(type === 'article'){
+    if(type === 'article' || type === 'blog_post'){
       if(result.hasOwnProperty('created')){
         date = new Date(parseInt(result.created.raw) * 1000);
       }
@@ -32,9 +32,9 @@ class RenderDate extends React.Component {
     }
     
     return (
-      <span>
-        <b>{ formatted }</b><p> {location}</p>
-      </span>
+      <div>
+        <span className="card__date">{ formatted }</span><p> {location}</p>
+      </div>
     )
   }
 }
@@ -86,6 +86,32 @@ class RenderTitle extends React.Component{
   }
 }
 
+class RenderDescription extends React.Component{
+  render(){
+    const result = this.props.result;
+    let body = result.body_summary.raw !== '' ? result.body_summary.raw: result.body.raw;
+    body = this.truncate(body, 500, true);
+    return (
+      <div className="sui-result__value"
+        dangerouslySetInnerHTML={{ __html: body }}
+      />
+    )
+  }
+
+  truncate( str, n, useWordBoundary ) {
+
+    if(str === 'undefined' || str === null){return ""; }
+
+    str = str.trim();
+    
+    if (str.length <= n) { return str; }
+    const subString = str.substr(0, n-1); // the original check
+    return (useWordBoundary 
+      ? subString.substr(0, subString.lastIndexOf(" ")) 
+      : subString) + "&hellip;";
+  };
+}
+
 class AddIcon extends React.Component{
   render(){
     let useTag = '';
@@ -131,14 +157,12 @@ export default ({ result }) => (
         <li>
           <span className="sui-result__value" >
             <RenderImage result={result}/>
-            { result.body.raw.substring(0, 500) }
+            <RenderDescription result={result} />
           </span>
           
         </li>
         <li>
-          <div className="sui-result__value">
             <RenderDate result={result}/>
-          </div>
         </li>
       </ul>
     </div>

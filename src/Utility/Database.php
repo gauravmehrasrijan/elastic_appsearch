@@ -74,20 +74,22 @@ class Database {
   public static function mapFieldValues($node, $field_type, $name, $field, &$response) {
     switch ($field_type) {
       case 'text_with_summary':
+        $summary = $node->get($name)->summary;
+        $response[$name . '_summary'] = $summary;
         try {
           $render_array = $node->$name->view('full');
           $rendered = \Drupal::service('renderer')->renderRoot($render_array);
           if (is_object($rendered)) {
-            $response[$name] = trim(strip_tags($rendered->__toString()));
+            $response[$name] = trim(html_entity_decode(strip_tags($rendered->__toString())));
           }
           else {
-            $response[$name] = trim(strip_tags($field->getString()));
+            $response[$name] = trim(html_entity_decode(strip_tags($field->getString())));
           }
         }
         catch (\Exception $e) {
           \Drupal::logger('elastic_appsearch')->notice('Failed to render HTML Body for node : ' . $node->id());
           \Drupal::logger('elastic_appsearch')->error($e->getMessage());
-          $response[$name] = trim(strip_tags($field->getString()));
+          $response[$name] = trim(html_entity_decode(strip_tags($field->getString())));
         }
 
         break;
@@ -99,7 +101,7 @@ class Database {
 
       case 'text':
       case 'text_long':
-        $response[$name] = $field->getString();
+        $response[$name] = html_entity_decode($field->getString());
         break;
 
       case 'entity_reference':
@@ -107,7 +109,7 @@ class Database {
         break;
 
       default:
-        $response[$name] = $field->getString();
+        $response[$name] = html_entity_decode($field->getString());
     }
   }
 

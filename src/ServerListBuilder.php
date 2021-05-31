@@ -128,6 +128,9 @@ class ServerListBuilder extends ConfigEntityListBuilder {
     /** @var \Drupal\search_api\ServerInterface[] $servers */
     $engines = \Drupal::entityTypeManager()->getStorage('elastic_appsearch_engine')->loadMultiple();
 
+    $this->sortByStatusThenAlphabetically($engines);
+    $this->sortByStatusThenAlphabetically($servers);
+
     $server_groups = [];
     foreach ($servers as $server) {
       $server_group = [

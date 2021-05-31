@@ -23,7 +23,7 @@ class EngineForm extends EntityForm {
       '#title' => $this->t('Label'),
       '#maxlength' => 255,
       '#default_value' => $engine->label(),
-      '#pattern' => '^[a-z\d]+$',
+      '#pattern' => '^[aA-zZ\d]+$',
       '#pattern_error' => 'Special charcters not allowed',
       '#description' => $this->t("Lowercase letters, numbers with no special charcters and spaces"),
       '#required' => TRUE,
@@ -159,7 +159,7 @@ class EngineForm extends EntityForm {
         $this->messenger()->addMessage($this->t('Saved the %label Engine.', [
           '%label' => $engine->label(),
         ]));
-        $engine->toUrl('canonical');
+        $redirect = $engine->toUrl('canonical');
     }
     $form_state->setRedirectUrl($redirect);
   }
