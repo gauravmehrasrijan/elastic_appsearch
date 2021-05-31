@@ -75,7 +75,7 @@ class Database {
     switch ($field_type) {
       case 'text_with_summary':
         $summary = $node->get($name)->summary;
-        $response[$name . '_summary'] = $summary;
+        $response[$name . '_summary'] = html_entity_decode($summary);
         try {
           $render_array = $node->$name->view('full');
           $rendered = \Drupal::service('renderer')->renderRoot($render_array);
