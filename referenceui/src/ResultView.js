@@ -10,7 +10,9 @@ class RenderDate extends React.Component {
     let formatted = '';
     let location = '';
 
-    if(type === 'article' || type === 'blog_post'){
+    const types = ["article", "blog_post", "story"];
+
+    if(types.includes(type)){
       if(result.hasOwnProperty('created')){
         date = new Date(parseInt(result.created.raw) * 1000);
       }
@@ -27,13 +29,20 @@ class RenderDate extends React.Component {
 
     if(result.hasOwnProperty('field_is_event_online')){
       if(result.field_is_event_online.raw !== 'undefined' && !parseInt(result.field_is_event_online.raw)){
-        location = result.field_event_location.raw
+        if(result.field_event_location.snippet){
+          let loc = result.field_event_location.raw.split(",");
+          location = loc[2] + ", " + loc[1];
+        }
       }
     }
     
     return (
       <div>
-        <span className="card__date">{ formatted }</span><p> {location}</p>
+        <span className="card__date">{ formatted }</span>
+        <br/>
+        <div className="card__location">
+          <span className="card__location-text">{location}</span>
+        </div>
       </div>
     )
   }
@@ -89,8 +98,11 @@ class RenderTitle extends React.Component{
 class RenderDescription extends React.Component{
   render(){
     const result = this.props.result;
-    let body = result.body_summary.raw !== '' ? result.body_summary.raw: result.body.raw;
-    body = this.truncate(body, 500, true);
+
+    let body_summary = (result.body_summary.snippet) ? result.body_summary.raw.trim() : '';
+    let body = (result.body.snippet) ? result.body.raw.trim(): "";
+
+    body = body_summary !== '' ? body_summary: body;    body = this.truncate(body, 500, true);
     return (
       <div className="sui-result__value"
         dangerouslySetInnerHTML={{ __html: body }}
@@ -144,27 +156,29 @@ export default ({ result }) => (
   <li className={`sui-result searchDiv sui-${result.type.raw} ${ (result.hasOwnProperty('field_is_event_online') && result.field_is_event_online.raw) ? 'sui-event-online' : 'off'  }`
     
     }>
-    <AddIcon result={result} />
-    <div className="sui-result__header">
-      <a href={result.path.raw}>
-        <RenderTitle result={result} />
-      </a>
-    </div>
+      <div className="card-list card-list--teaser card-list--teaser-search">
+      <AddIcon result={result} />
+        <div className="sui-result__header">
+          <a href={result.path.raw}>
+            <RenderTitle result={result} />
+          </a>
+        </div>
 
-    <div className="sui-result__body">
+        <div className="sui-result__body">
 
-      <ul className="sui-result__details">
-        <li>
-          <span className="sui-result__value" >
-            <RenderImage result={result}/>
-            <RenderDescription result={result} />
-          </span>
-          
-        </li>
-        <li>
-            <RenderDate result={result}/>
-        </li>
-      </ul>
-    </div>
+          <ul className="sui-result__details">
+            <li>
+              <span className="sui-result__value" >
+                <RenderImage result={result}/>
+                <RenderDescription result={result} />
+              </span>
+              
+            </li>
+            <li>
+                <RenderDate result={result}/>
+            </li>
+          </ul>
+        </div>
+      </div>
   </li>
 );
