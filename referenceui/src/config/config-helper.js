@@ -162,12 +162,12 @@ export function buildSortOptionsFromConfig() {
     },
     ...(config.sortFields || []).reduce((acc, sortField) => {
       acc.push({
-        name: `${sortField.title} ASC`,
+        name: `${sortField.title} ↓`,
         value: sortField.field,
         direction: "asc"
       });
       acc.push({
-        name: `${sortField.title} DESC`,
+        name: `${sortField.title} ↑`,
         value: sortField.field,
         direction: "desc"
       });
