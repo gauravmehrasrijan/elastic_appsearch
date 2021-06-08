@@ -101,27 +101,27 @@ class ReferenceUIForm extends EntityForm {
     $fields_selected = (!empty($form_state->getValue('fields_filter'))) ?
       $form_state->getValue('fields_filter') : $elastic_appsearch_referenceui->getFieldsFilter();
 
+    $available_fields = $this->getSearchableSelected($fields_selected, $engine_value);
     $defaults = $elastic_appsearch_referenceui->getFieldsFilterSearchable();
-
-    $available_searchable_fields = $this->getSearchableSelected($fields_selected, $engine_value);
+    $defaults_disjunctives = $elastic_appsearch_referenceui->getFieldsFilterDisjunctive();
 
     $form['settings']['extra']['fields_filter_disjunctive'] = [
       '#type' => 'checkboxes',
       '#title' => $this->t('Select fileters that are disjunctive in nature.'),
-      '#options' => $available_searchable_fields,
-      '#default_value' => ($defaults) ? $defaults : [],
+      '#options' => $available_fields,
+      '#default_value' => ($defaults_disjunctives) ? $defaults_disjunctives : [],
       '#description' => $this->t("This will enable filtering for multiple values within selected facets independently"),
       '#required' => FALSE,
       '#prefix' => '<div id="form_searchable_fields">'
     ];
 
-    $defaults_disjunctives = $elastic_appsearch_referenceui->getFieldsFilterDisjunctive();
+    $defaults_searchable = $elastic_appsearch_referenceui->getFieldsFilterSearchable();
 
     $form['settings']['extra']['fields_filter_searchable'] = [
       '#type' => 'checkboxes',
       '#title' => $this->t('Select fields to enable facet field search.'),
-      '#options' => $available_searchable_fields,
-      '#default_value' => ($defaults_disjunctives) ? $defaults_disjunctives : [],
+      '#options' => $available_fields,
+      '#default_value' => ($defaults_searchable) ? $defaults_searchable : [],
       '#description' => $this->t("Faceted values rendered as filters and available as query refinement"),
       '#required' => FALSE,
       '#suffix' => '</div>'
