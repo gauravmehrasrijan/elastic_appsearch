@@ -498,8 +498,9 @@ html {
   border: 0;
 }
 .article__search-button {
-  width: 191px;
+  width: 210px;
   padding: 1px;
+  text-transform: uppercase;
 }
 
 .sui-layout-main-body {
@@ -569,8 +570,8 @@ html {
 }
 .blog-img {
   width: auto;
-  height: 200px;
-  float: right;
+  display: block;
+  margin-bottom: 10px;
 }
 .sui-layout-sidebar details {
   padding: 4px 0
@@ -679,7 +680,7 @@ html {
   opacity: 0.5;
 }
 .sui-paging .rc-pagination-item a {
-  color: #3a56e4;
+  color: #01719e;
   text-decoration: none;
 }
 .sui-paging .rc-pagination-item:hover {

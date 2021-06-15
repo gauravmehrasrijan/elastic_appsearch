@@ -131,7 +131,7 @@ class Database {
           $response[$name] = $media_url;
         }
         catch (\Exception $e) {
-          // Do nothing for now. will decide later.
+          \Drupal::logger('elastic_appsearch')->error($e->getMessage());
         }
       }
     }
