@@ -252,20 +252,6 @@ class Engine extends ConfigEntityBase implements EngineInterface {
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function delete() {
-    parent::delete();
-    if ($this->getClient()) {
-      try {
-        $this->getClient()->deleteEngine($this->id());
-      }
-      catch (\Exception $e) {
-        \Drupal::logger('elastic_appsearch')->notice('Unable to delete engine - ' . $this->id());
-      }
-    }
-  }
 
   /**
    * {@inheritdoc}
