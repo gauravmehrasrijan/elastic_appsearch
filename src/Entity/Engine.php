@@ -281,6 +281,8 @@ class Engine extends ConfigEntityBase implements EngineInterface {
    * {@inheritdoc}
    */
   public function indexDocuments($documents) {
+    $path = \Drupal::service('path.current')->getPath();
+    \Drupal::logger('elastic_appsearch')->notice('Indexed ' . $this->id() . ' from' . $path);
     return $this->getClient()->indexDocuments($this->id(), $documents);
   }
 
