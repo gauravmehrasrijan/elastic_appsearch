@@ -137,6 +137,12 @@ class EngineStatusForm extends FormBase {
       '#name' => 'rebuild_tracker',
       '#button_type' => 'danger',
     ];
+    $form['actions']['wipe_all'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Wipe all documents'),
+      '#name' => 'wipe_all',
+      '#button_type' => 'danger',
+    ];
 
     return $form;
   }
@@ -166,6 +172,12 @@ class EngineStatusForm extends FormBase {
         // $engine->getTrackerInstance()->trackAllItemsUpdated();
         $engine->performTasks(['index']);
         break;
+
+      case 'wipe_all':
+        $form_state->setRedirect('entity.elastic_appsearch_engine.wipe_all', ['elastic_appsearch_engine' => $engine->id()]);
+        // $engine->performTasks(['wipe_all']);
+        break;
+
     }
 
   }

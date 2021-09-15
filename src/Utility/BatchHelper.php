@@ -91,6 +91,54 @@ class BatchHelper {
   /**
    * {@inheritdoc}
    */
+  public static function wipe_all($engine, $options, &$context) {
+
+    $batch_size = $options['batch_size'];
+
+    // Get document count.
+    $documents = $engine->listDocuments($engine->id(), 1, $batch_size);
+    $max = $documents['meta']['page']['total_results'];
+    $page_count = $documents['meta']['page']['total_pages'];
+
+    if (!isset($context['sandbox']['progress'])) {
+      $context['sandbox']['progress'] = 0;
+      $context['sandbox']['current_node'] = 0;
+      $context['sandbox']['batch_size'] = $batch_size;
+      $context['sandbox']['max'] = $page_count;
+    }
+
+    // Delete documents in batch.
+    for ($i = 1; $i<=$page_count; $i++) {
+      $delete_ids = [];
+      $context['sandbox']['progress'] = $i;
+      $context['sandbox']['current_node'] = $i;
+      $context['message'] = 'Deleting Records in batch ' . $i . 'of '. $batch_size;
+      $documents = $engine->listDocuments($engine->id(), $i, $batch_size);
+
+      foreach ($documents['results'] as $document) {
+        $delete_ids[] = Database::filterNodeId($document['id']);
+      }
+      if (!empty($delete_ids)) {
+        $engine->getClient()->deleteDocuments($engine->id(), $delete_ids);
+      }
+      unset($delete_ids);
+    }
+
+    $engine->getTrackerInstance()->trackAllItemsDeleted();
+
+    if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
+      $context['finished'] = ($context['sandbox']['progress'] / $context['sandbox']['max']);
+    }
+    else {
+      $context['finished'] = 1;
+      $context['message'] = 'All documents deleted successfully';
+    }
+
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function clear($engine, $options, &$context) {
     // Mark all for re indexing.
     $engine->getTrackerInstance()->trackAllItemsUpdated();

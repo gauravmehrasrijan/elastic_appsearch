@@ -63,6 +63,17 @@ entity.elastic_appsearch_engine.clear:
       elastic_appsearch_engine:
         with_config_overrides: TRUE
 
+entity.elastic_appsearch_engine.wipe_all:
+  path: '/admin/config/search/elastic-appsearch/engine/{elastic_appsearch_engine}/wipe_all'
+  defaults:
+    _entity_form: 'elastic_appsearch_engine.wipe_all'
+  requirements:
+    _permission: 'elastic_appsearch'
+  options:
+    parameters:
+      elastic_appsearch_engine:
+        with_config_overrides: TRUE
+
 elastic_appsearch.engine_status_form:
   path: '/elastic_appsearch/form/engine_status'
   defaults:

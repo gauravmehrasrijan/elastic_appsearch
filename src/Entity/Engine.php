@@ -24,6 +24,7 @@ use Drupal\elastic_appsearch\Utility\BatchHelper;
  *       "schema" = "Drupal\elastic_appsearch\Form\FieldSchemaForm",
  *       "reindex" = "Drupal\elastic_appsearch\Form\EngineReindexConfirmForm",
  *       "clear" = "Drupal\elastic_appsearch\Form\EngineClearIndexConfirmForm",
+ *       "wipe_all" = "Drupal\elastic_appsearch\Form\EngineWipeAllConfirmForm",
  *     },
  *     "route_provider" = {
  *       "html" = "Drupal\elastic_appsearch\EngineHtmlRouteProvider",
@@ -284,6 +285,13 @@ class Engine extends ConfigEntityBase implements EngineInterface {
     $path = \Drupal::request()->getHost();
     \Drupal::logger('elastic_appsearch')->notice('Indexed ' . $this->id() . ' from ' . $path);
     return $this->getClient()->indexDocuments($this->id(), $documents);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function listDocuments() {
+    return $this->getClient()->listDocuments($this->id());
   }
 
   /**
