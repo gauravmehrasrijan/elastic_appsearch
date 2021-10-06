@@ -95,7 +95,7 @@ class Database {
         break;
 
       case 'path':
-      $path = explode(', ', $field->getString());
+        $path = explode(', ', $field->getString());
         if ($field->getLangcode() != 'en') {
           $response[$name] = ($path[0]) ? '/' . $field->getLangcode() . $path[0] : '';
         }
