@@ -108,11 +108,11 @@ class BatchHelper {
     }
 
     // Delete documents in batch.
-    for ($i = 1; $i<=$page_count; $i++) {
+    for ($i = 1; $i <= $page_count; $i++) {
       $delete_ids = [];
       $context['sandbox']['progress'] = $i;
       $context['sandbox']['current_node'] = $i;
-      $context['message'] = 'Deleting Records in batch ' . $i . 'of '. $batch_size;
+      $context['message'] = 'Deleting Records in batch ' . $i . 'of ' . $batch_size;
       $documents = $engine->listDocuments($engine->id(), $i, $batch_size);
 
       foreach ($documents['results'] as $document) {

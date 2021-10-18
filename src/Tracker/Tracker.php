@@ -428,7 +428,7 @@ class Tracker {
   /**
    * {@inheritdoc}
    */
-  public function logException($e){
+  public function logException($e) {
     \Drupal::logger('elastic_appsearch')->error($e->getMessage());
   }
 
