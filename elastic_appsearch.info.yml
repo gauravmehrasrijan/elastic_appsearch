@@ -1,5 +1,5 @@
 name: 'elastic_appsearch'
 type: module
 description: 'CCF module to interact with elastic enterprise search.'
-core: 8.x
+core_version_requirement: ^8 || ^9
 package: 'CCF'
