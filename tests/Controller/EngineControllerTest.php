@@ -3,9 +3,6 @@
 namespace Drupal\elastic_appsearch\Tests;
 
 use Drupal\simpletest\WebTestBase;
-use GuzzleHttp\ClientInterface;
-use Drupal\Core\Database\Driver\mysql\Connection;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 
 /**
  * Provides automated tests for the elastic_appsearch module.

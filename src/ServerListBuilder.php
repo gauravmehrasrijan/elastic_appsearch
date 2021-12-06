@@ -7,11 +7,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\elastic_appsearch\Entity\ServerInterface;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
-use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Url;
-use Drupal\node\Entity\NodeType;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\elastic_appsearch\Entity\EngineInterface;
 
 /**
@@ -146,7 +142,7 @@ class ServerListBuilder extends ConfigEntityListBuilder {
     }
 
     return [
-      'servers' => $server_groups
+      'servers' => $server_groups,
     ];
   }
 

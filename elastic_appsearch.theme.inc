@@ -5,11 +5,8 @@
  * Contains theme preprocessors.
  */
 
-use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\elastic_appsearch\Entity\Server;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Url;
-use Drupal\elastic_appsearch\Utility\Common;
 use Drupal\Core\Link;
 use Drupal\Component\Serialization\Json;
 
@@ -81,42 +78,42 @@ function template_preprocess_engine(array &$variables) {
 
   $rows[] = [
     'label' => t('Engine'),
-    'info' => Link::fromTextAndUrl($engine->id(), $engine->toUrl('edit-form'))
+    'info' => Link::fromTextAndUrl($engine->id(), $engine->toUrl('edit-form')),
   ];
 
   $rows[] = [
     'label' => t('Status'),
-    'info' => $engine->status() ? "Enabled" : "Disabled"
+    'info' => $engine->status() ? "Enabled" : "Disabled",
   ];
 
   $rows[] = [
     'label' => t('Total Documents'),
-    'info' => $total_count
+    'info' => $total_count,
   ];
 
   $rows[] = [
     'label' => t('Documents Processed'),
-    'info' => ($indexed_count) ? $indexed_count : $engine_info['document_count']
+    'info' => ($indexed_count) ? $indexed_count : $engine_info['document_count'],
   ];
 
   $rows[] = [
     'label' => t('Documents Processed'),
-    'info' => ($indexed_count) ? $indexed_count : $engine_info['document_count']
+    'info' => ($indexed_count) ? $indexed_count : $engine_info['document_count'],
   ];
 
   $rows[] = [
     'label' => t('Failure Count'),
-    'info' => ($total_count - $engine_info['document_count'])
+    'info' => ($total_count - $engine_info['document_count']),
   ];
 
   $rows[] = [
     'label' => t('Server'),
-    'info' => Link::fromTextAndUrl($engine->getServer(), $engine->getServerInstance()->toUrl('canonical'))
+    'info' => Link::fromTextAndUrl($engine->getServer(), $engine->getServerInstance()->toUrl('canonical')),
   ];
 
   $rows[] = [
     'label' => t('Schema'),
-    'info' => Link::fromTextAndUrl('Edit Schema', $engine->toUrl('schema'))
+    'info' => Link::fromTextAndUrl('Edit Schema', $engine->toUrl('schema')),
   ];
 
   $url = Url::fromRoute(
@@ -125,7 +122,7 @@ function template_preprocess_engine(array &$variables) {
   );
   $rows[] = [
     'label' => t('Search UI'),
-    'info' => Link::fromTextAndUrl('View Search UI', $url)
+    'info' => Link::fromTextAndUrl('View Search UI', $url),
   ];
 
   // Add the indexing progr ess bar.
@@ -173,7 +170,7 @@ function template_preprocess_server(array &$variables) {
       'Document Count',
       'Is Sync',
       'Datasources',
-      'Operations'
+      'Operations',
     ];
     $rows = [];
 
@@ -206,7 +203,7 @@ function template_preprocess_server(array &$variables) {
     '#header' => $headers,
     '#rows' => $rows,
     '#empty' => t('No Engine found on the server'),
-    '#attached' => ['library' => ['core/drupal.dialog.ajax']]
+    '#attached' => ['library' => ['core/drupal.dialog.ajax']],
   ];
 
 }
@@ -228,8 +225,8 @@ function build_ajax_url($engine) {
       'data-dialog-type' => 'modal',
       'data-dialog-options' => Json::encode([
         'width' => 700,
-      ])
-    ]
+      ]),
+    ],
   ];
   $url = Url::fromRoute(
     'elastic_appsearch.elastic_appsearch_server.engine_schema',

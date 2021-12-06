@@ -3,9 +3,7 @@
 namespace Drupal\elastic_appsearch\Utility;
 
 use Drupal\node\Entity\Node;
-use Drupal\elastic_appsearch\Utility\Common;
 use Drupal\media\Entity\Media;
-use Drupal\file\Entity\File;
 use Drupal\image\Entity\ImageStyle;
 
 /**

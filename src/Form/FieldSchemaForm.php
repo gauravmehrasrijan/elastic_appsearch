@@ -2,21 +2,12 @@
 
 namespace Drupal\elastic_appsearch\Form;
 
-use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
-use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Render\RendererInterface;
-use Drupal\Core\Url;
-use Drupal\search_api\DataType\DataTypePluginManager;
-use Drupal\search_api\Processor\ConfigurablePropertyInterface;
-use Drupal\search_api\SearchApiException;
-use Drupal\search_api\Utility\DataTypeHelperInterface;
-use Drupal\search_api\Utility\FieldsHelperInterface;
-use Drupal\Core\TempStore\SharedTempStoreFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -229,7 +220,7 @@ class FieldSchemaForm extends EntityForm {
           $schema[] = [
             'label' => $field['title'],
             'field_id' => $field['id'],
-            'type' => $field['type']
+            'type' => $field['type'],
           ];
         }
       }

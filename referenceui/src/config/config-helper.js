@@ -22,13 +22,15 @@ export function getConfig() {
     return window.appConfig;
   }
 
-  if (config.engineName) return config;
+  if (config.engineName) { return config;
+  }
 
   return {};
 }
 
 function toLowerCase(string) {
-  if (string) return string.toLowerCase();
+  if (string) { return string.toLowerCase();
+  }
 }
 
 function capitalizeFirstLetter(string) {
@@ -133,7 +135,7 @@ export function buildSearchOptionsFromConfig() {
 
   const searchOptions = {};
   searchOptions.result_fields = resultFields;
-  searchOptions.search_fields = searchFields;  
+  searchOptions.search_fields = searchFields;
   return searchOptions;
 }
 

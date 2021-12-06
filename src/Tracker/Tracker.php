@@ -5,7 +5,7 @@ namespace Drupal\elastic_appsearch\Tracker;
 use Drupal\elastic_appsearch\Utility\Common;
 
 /**
- * Class TrackerService.
+ * Class Tracker Service.
  */
 class Tracker {
 

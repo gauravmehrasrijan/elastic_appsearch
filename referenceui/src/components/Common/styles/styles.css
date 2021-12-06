@@ -329,7 +329,11 @@ html {
   display: flex;
   flex-direction: column;
 }
-.svgicon-default{ position: absolute; top: 30px; left: 2px;}
+.svgicon-default {
+  position: absolute;
+  top: 30px;
+  left: 2px;
+}
 /**
  * Header / Searchbox
  */
@@ -574,7 +578,7 @@ html {
   margin-bottom: 10px;
 }
 .sui-layout-sidebar details {
-  padding: 4px 0
+  padding: 4px 0;
 }
 .sui-layout-sidebar details[open] {
   color: #009dd2;

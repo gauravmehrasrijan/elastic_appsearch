@@ -3,13 +3,10 @@
 namespace Drupal\elastic_appsearch;
 
 use GuzzleHttp\ClientInterface;
-use Drupal\Core\Database\Driver\mysql\Connection;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\Core\Messenger\MessengerTrait;
-use GuzzleHttp\Exception\RequestException;
 use Elastic\AppSearch\Client\ClientBuilder;
-use Drupal\elastic_appsearch\Entity\ServerInterface;
 
 /**
  * Class AppSearchClient.
