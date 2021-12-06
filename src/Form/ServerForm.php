@@ -6,7 +6,7 @@ use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Class ServerForm.
+ * Class Server Form.
  */
 class ServerForm extends EntityForm {
 
@@ -42,7 +42,7 @@ class ServerForm extends EntityForm {
       '#title' => $this->t('Backend Endpoint'),
       '#maxlength' => 255,
       '#default_value' => $server->getHost(),
-      '#description' => $this->t($api_endpoint_helptext),
+      '#description' => $api_endpoint_helptext,
       '#required' => TRUE,
     ];
 
@@ -51,7 +51,7 @@ class ServerForm extends EntityForm {
       '#title' => $this->t('Backend Secret Key'),
       '#maxlength' => 255,
       '#default_value' => $server->getSecret(),
-      '#description' => $this->t($api_endpoint_helptext),
+      '#description' => $api_endpoint_helptext,
       '#required' => TRUE,
     ];
 

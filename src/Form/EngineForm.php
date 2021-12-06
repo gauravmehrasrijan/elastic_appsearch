@@ -7,7 +7,7 @@ use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Class EngineForm.
+ * Class Engine Form.
  */
 class EngineForm extends EntityForm {
 
@@ -60,7 +60,7 @@ class EngineForm extends EntityForm {
       '#description' => $this->t("Select from the available content types to be index on engine"),
       '#required' => TRUE,
       '#attributes' => [
-        'style' => 'width: 50em;'
+        'style' => 'width: 50em;',
       ],
     ];
 
@@ -115,7 +115,7 @@ class EngineForm extends EntityForm {
       'pt-br' => 'Portuguese (Brazil)',
       'ru' => 'Russian',
       'es' => 'Spanish',
-      'th' => 'Thai'
+      'th' => 'Thai',
     ];
   }
 

@@ -11,7 +11,7 @@ use Drupal\elastic_appsearch\Entity\EngineInterface;
 use Drupal\Component\Render\FormattableMarkup;
 
 /**
- * Class EngineController.
+ * Class Engine Controller.
  */
 class EngineController extends ControllerBase {
 

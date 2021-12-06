@@ -45,64 +45,64 @@ const config = {
 
 export default function App() {
   return (
-    <SearchProvider config={config}>
-      <WithSearch mapContextToProps={({ wasSearched }) => ({ wasSearched })}>
+    < SearchProvider config = {config} >
+      < WithSearch mapContextToProps = {({ wasSearched }) => ({ wasSearched })} >
         {({ wasSearched }) => {
           return (
-            <div className="App">
-              <ErrorBoundary>
-                <Layout
-                  header={
-                  <div className="sui__header-wrapper">
-                    <div className="flex-wrap flex-lg-nowrap">
-                      <SearchBox autocompleteSuggestions={true} />
-                    </div>
-                    <div>
+            < div className = "App" >
+              < ErrorBoundary >
+                < Layout
+                  header = {
+                  < div className = "sui__header-wrapper" >
+                    < div className = "flex-wrap flex-lg-nowrap" >
+                      < SearchBox autocompleteSuggestions = {true} / >
+                    < / div >
+                    < div >
                       {wasSearched && (
-                        <div>
-                          <Sorting
-                            sortOptions={buildSortOptionsFromConfig()}
-                          />
-                          </div>
+                        < div >
+                          < Sorting
+                            sortOptions = {buildSortOptionsFromConfig()}
+                          / >
+                          < / div >
                         )}
-                        
-                    </div>
-                  </div>
+
+                    < / div >
+                  < / div >
                 }
-                  sideContent={
-                    <div>
+                  sideContent = {
+                    < div >
                       {getFacetFields().map(field => (
-                        <Facet 
-                          filterType="any"
-                          isFilterable={field.isFilterable}
-                          key={field.field}
-                          field={field.field}
-                          label={field.title} 
-                        />
+                        < Facet
+                          filterType = "any"
+                          isFilterable = {field.isFilterable}
+                          key = {field.field}
+                          field = {field.field}
+                          label = {field.title}
+                        / >
                       ))}
-                    </div>
+                    < / div >
                   }
-                  bodyContent={
-                    <Results
-                      titleField={getConfig().titleField}
-                      urlField={getConfig().urlField}
-                      resultView={ResultView}
-                      shouldTrackClickThrough={true}
-                    />
+                  bodyContent = {
+                    < Results
+                      titleField = {getConfig().titleField}
+                      urlField = {getConfig().urlField}
+                      resultView = {ResultView}
+                      shouldTrackClickThrough = {true}
+                    / >
                   }
-                  bodyHeader={
-                    <React.Fragment>
-                      {wasSearched && <PagingInfo />}
-                      {wasSearched && <ResultsPerPage />}
-                    </React.Fragment>
+                  bodyHeader = {
+                    < React.Fragment >
+                      {wasSearched && < PagingInfo / > }
+                      {wasSearched && < ResultsPerPage / > }
+                    < / React.Fragment >
                   }
-                  bodyFooter={<Paging />}
-                />
-              </ErrorBoundary>
-            </div>
+                  bodyFooter = { < Paging / > }
+                / >
+              < / ErrorBoundary >
+            < / div >
           );
         }}
-      </WithSearch>
-    </SearchProvider>
+      < / WithSearch >
+    < / SearchProvider >
   );
 }

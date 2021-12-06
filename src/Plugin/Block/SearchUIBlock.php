@@ -4,7 +4,6 @@ namespace Drupal\elastic_appsearch\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\elastic_appsearch\Utility\Database;
 use Drupal\Core\Cache\Cache;
 
 /**
@@ -100,7 +99,7 @@ class SearchUIBlock extends BlockBase {
         '#attributes' => ['type' => 'text/javascript'],
         '#value' => $inlinejs,
       ],
-      'elastic_appsearch_inlinejs'
+      'elastic_appsearch_inlinejs',
     ];
     return $build;
   }
@@ -148,7 +147,7 @@ class SearchUIBlock extends BlockBase {
     foreach ($sorts as $sort) {
       $field_sort[] = [
         'title' => $engine_fields[$sort]['label'],
-        'field' => $sort
+        'field' => $sort,
       ];
     }
     $facets = $this->referenceui->getFieldsFilter();
@@ -156,7 +155,7 @@ class SearchUIBlock extends BlockBase {
       $field_facets[] = [
         'title' => $engine_fields[$facet]['label'],
         'field' => $facet,
-        'isFilterable' => (array_key_exists($facet, $searchables) && $searchables[$facet] != '0') ? TRUE : FALSE
+        'isFilterable' => (array_key_exists($facet, $searchables) && $searchables[$facet] != '0') ? TRUE : FALSE,
       ];
     }
     $disjunctives = $this->referenceui->getFieldsFilterDisjunctive();
@@ -172,8 +171,8 @@ class SearchUIBlock extends BlockBase {
         'titleField' => $this->referenceui->getFieldTitle(),
         'urlField' => $this->referenceui->getFieldUrl(),
         '_ctags' => $this->referenceui->getCacheTags(),
-        'searchables' => $searchables
-      ]
+        'searchables' => $searchables,
+      ],
     ];
   }
 

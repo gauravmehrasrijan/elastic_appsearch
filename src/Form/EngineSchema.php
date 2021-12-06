@@ -10,7 +10,7 @@ use Drupal\Core\Messenger\MessengerInterface;
 use GuzzleHttp\ClientInterface;
 
 /**
- * Class EngineSchema.
+ * Class Engine Schema.
  */
 class EngineSchema extends FormBase {
 
@@ -97,7 +97,7 @@ class EngineSchema extends FormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     foreach ($form_state->getValues() as $key => $value) {
-      // @TODO: Validate fields.
+      // @todo Validate fields.
     }
     parent::validateForm($form, $form_state);
   }

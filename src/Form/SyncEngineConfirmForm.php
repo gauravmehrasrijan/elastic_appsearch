@@ -5,8 +5,6 @@ namespace Drupal\elastic_appsearch\Form;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
-use Drupal\Core\Url;
-use Drupal\Core\Utility\Error;
 use Drupal\search_api\SearchApiException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -66,7 +64,8 @@ class SyncEngineConfirmForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    // Return new Url('entity.elastic_appsearch_engine.canonical', ['elastic_appsearch_engine' => $this->entity->id()]);
+    // Return new Url('entity.elastic_appsearch_engine.canonical',
+    //['elastic_appsearch_engine' => $this->entity->id()]);
   }
 
   /**

@@ -21,7 +21,7 @@ class RenderDate extends React.Component {
         let event_date = result.field_event_date.raw.split(',');
         date = new Date(Date.parse(event_date[0]));
       }
-    } 
+    }
 
     if(date){
       formatted = month[date.getMonth()] + ' ' + date.getDate() + ', ' + date.getFullYear();
@@ -35,15 +35,15 @@ class RenderDate extends React.Component {
         }
       }
     }
-    
+
     return (
-      <div>
-        <span className="card__date">{ formatted }</span>
-        <br/>
-        <div className="card__location">
-          <span className="card__location-text">{location}</span>
-        </div>
-      </div>
+      < div >
+        < span className = "card__date" > { formatted } < / span >
+        < br / >
+        < div className = "card__location" >
+          < span className = "card__location-text" > {location} < / span >
+        < / div >
+      < / div >
     )
   }
 }
@@ -53,7 +53,7 @@ class RenderImage extends React.Component {
   render() {
     let image = "";
     const result = this.props.result;
-    
+
     if(result.hasOwnProperty('field_article_thumbnail')){
       if(result.field_article_thumbnail.raw !== ''){
         image = result.field_article_thumbnail.raw;
@@ -74,23 +74,23 @@ class RenderImage extends React.Component {
 
     if(image){
       return (
-        <span className="blog-img float-lg-right ml-lg-3"><img height="220px" width="220px" alt={image} src={image} /></span>
+        < span className = "blog-img float-lg-right ml-lg-3" > < img height = "220px" width = "220px" alt = {image} src = {image} / > < / span >
       )
     }
 
     return (null)
-    
+
   }
 }
 
 class RenderTitle extends React.Component{
   render(){
     const result = this.props.result;
-    let title = result.title.snippet.includes('<em>') ? result.title.snippet: result.title.raw;
+    let title = result.title.snippet.includes('<em>') ? result.title.snippet : result.title.raw;
     return (
-      <span className="sui-result__title"
-        dangerouslySetInnerHTML={{ __html: title }}
-      />
+      < span className = "sui-result__title"
+        dangerouslySetInnerHTML = {{ __html: title }}
+      / >
     )
   }
 }
@@ -100,13 +100,13 @@ class RenderDescription extends React.Component{
     const result = this.props.result;
 
     let body_summary = (result.body_summary.snippet) ? result.body_summary.raw.trim() : '';
-    let body = (result.body.snippet) ? result.body.raw.trim(): "";
+    let body = (result.body.snippet) ? result.body.raw.trim() : "";
 
-    body = body_summary !== '' ? body_summary: body;    body = this.truncate(body, 500, true);
+    body = body_summary !== '' ? body_summary : body;    body = this.truncate(body, 500, true);
     return (
-      <div className="sui-result__value"
-        dangerouslySetInnerHTML={{ __html: body }}
-      />
+      < div className = "sui-result__value"
+        dangerouslySetInnerHTML = {{ __html: body }}
+      / >
     )
   }
 
@@ -117,9 +117,9 @@ class RenderDescription extends React.Component{
     str = str.trim();
 
     if (str.length <= n) { return str; }
-    const subString = str.substr(0, n-1); // the original check
-    return (useWordBoundary 
-      ? subString.substr(0, subString.lastIndexOf(" ")) 
+    const subString = str.substr(0, n - 1); // the original check
+    return (useWordBoundary
+      ? subString.substr(0, subString.lastIndexOf(" "))
       : subString) + "&hellip;";
   }
 }
@@ -134,7 +134,7 @@ class AddIcon extends React.Component{
       }
 
       if(result.type.raw === 'event' && result.hasOwnProperty('field_is_event_online')){
-        
+
         if(result.field_is_event_online.raw === "0"){
           useTag = '<use xlink:href="/themes/custom/particle/dist/app-drupal/assets/spritemap.svg?cacheBuster=#sprite-location-pin" />';
         }else{
@@ -142,43 +142,42 @@ class AddIcon extends React.Component{
         }
       }
     }
-   
 
     return(
-      <div className="svgicon-default">
-        <svg viewBox="0 0 20 20" dangerouslySetInnerHTML={{__html: useTag }} />
-      </div>
+      < div className = "svgicon-default" >
+        < svg viewBox = "0 0 20 20" dangerouslySetInnerHTML = {{__html: useTag }} / >
+      < / div >
     )
   }
 }
 
 export default ({ result }) => (
-  <li className={`sui-result searchDiv sui-${result.type.raw} ${ (result.hasOwnProperty('field_is_event_online') && result.field_is_event_online.raw) ? 'sui-event-online' : 'off'  }`
-    
-    }>
-      <div className="card-list card-list--teaser card-list--teaser-search">
-      <AddIcon result={result} />
-        <div className="sui-result__header">
-          <a href={result.path.raw}>
-            <RenderTitle result={result} />
-          </a>
-        </div>
+  < li className = {`sui - result searchDiv sui - ${result.type.raw} ${ (result.hasOwnProperty('field_is_event_online') && result.field_is_event_online.raw) ? 'sui-event-online' : 'off'  }`
 
-        <div className="sui-result__body">
+    } >
+      < div className = "card-list card-list--teaser card-list--teaser-search" >
+      < AddIcon result = {result} / >
+        < div className = "sui-result__header" >
+          < a href = {result.path.raw} >
+            < RenderTitle result = {result} / >
+          < / a >
+        < / div >
 
-          <ul className="sui-result__details">
-            <li>
-              <span className="sui-result__value" >
-                <RenderImage result={result}/>
-                <RenderDescription result={result} />
-              </span>
-              
-            </li>
-            <li>
-                <RenderDate result={result}/>
-            </li>
-          </ul>
-        </div>
-      </div>
-  </li>
+        < div className = "sui-result__body" >
+
+          < ul className = "sui-result__details" >
+            < li >
+              < span className = "sui-result__value" >
+                < RenderImage result = {result} / >
+                < RenderDescription result = {result} / >
+              < / span >
+
+            < / li >
+            < li >
+                < RenderDate result = {result} / >
+            < / li >
+          < / ul >
+        < / div >
+      < / div >
+  < / li >
 );

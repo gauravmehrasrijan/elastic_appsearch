@@ -4,7 +4,7 @@ export default class Result extends React.Component {
   render() {
       const content = this.props;
       console.log(content);
-      return <h1>Hii</h1>;
+      return < h1 > Hii < / h1 >;
 //     return this.props.content.map((element) => {
 //       return (
 //         <div className="result-card">

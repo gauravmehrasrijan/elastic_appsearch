@@ -4,7 +4,6 @@ namespace Drupal\elastic_appsearch\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\elastic_appsearch\ElasticSearchInterface;
 use Drupal\elastic_appsearch\Utility\Database;
 use Drupal\elastic_appsearch\Utility\BatchHelper;
 
@@ -179,7 +178,7 @@ class Engine extends ConfigEntityBase implements EngineInterface {
       'text' => 'Text',
       'number' => 'Number',
       'date' => 'Date',
-      'geolocation' => 'Geolocation'
+      'geolocation' => 'Geolocation',
     ];
   }
 

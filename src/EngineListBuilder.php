@@ -4,7 +4,6 @@ namespace Drupal\elastic_appsearch;
 
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityTypeInterface;
 
 /**
  * Provides a listing of Engine entities.

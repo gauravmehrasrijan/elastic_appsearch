@@ -4,11 +4,9 @@ namespace Drupal\elastic_appsearch\Form;
 
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Ajax\AjaxResponse;
-use Drupal\Core\Ajax\ReplaceCommand;
 
 /**
- * Class ReferenceUIForm.
+ * Class Reference UI Form.
  */
 class ReferenceUIForm extends EntityForm {
 
@@ -89,7 +87,7 @@ class ReferenceUIForm extends EntityForm {
       '#prefix' => '<div id="form_schema_filter">',
       '#suffix' => '</div>',
       '#attributes' => [
-        'style' => 'width: 50em;'
+        'style' => 'width: 50em;',
       ],
       '#ajax' => [
         'callback' => [$this, 'updateFilters'],
@@ -112,7 +110,7 @@ class ReferenceUIForm extends EntityForm {
       '#default_value' => ($defaults_disjunctives) ? $defaults_disjunctives : [],
       '#description' => $this->t("This will enable filtering for multiple values within selected facets independently"),
       '#required' => FALSE,
-      '#prefix' => '<div id="form_searchable_fields">'
+      '#prefix' => '<div id="form_searchable_fields">',
     ];
 
     $defaults_searchable = $elastic_appsearch_referenceui->getFieldsFilterSearchable();
@@ -124,7 +122,7 @@ class ReferenceUIForm extends EntityForm {
       '#default_value' => ($defaults_searchable) ? $defaults_searchable : [],
       '#description' => $this->t("Faceted values rendered as filters and available as query refinement"),
       '#required' => FALSE,
-      '#suffix' => '</div>'
+      '#suffix' => '</div>',
     ];
 
     $form['settings']['fields_sort'] = [
@@ -138,7 +136,7 @@ class ReferenceUIForm extends EntityForm {
       '#prefix' => '<div id="form_schema_sort">',
       '#suffix' => '</div>',
       '#attributes' => [
-        'style' => 'width: 50em;'
+        'style' => 'width: 50em;',
       ],
     ];
 
@@ -150,7 +148,7 @@ class ReferenceUIForm extends EntityForm {
       '#description' => $this->t("Used as a result's link target, if applicable"),
       '#required' => TRUE,
       '#prefix' => '<div id="form_schema_url">',
-      '#suffix' => '</div>'
+      '#suffix' => '</div>',
     ];
 
     $form['status'] = [
