@@ -4,10 +4,6 @@ namespace Drupal\elastic_appsearch\Utility;
 
 use Drupal\Component\Render\MarkupInterface;
 use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Config\Config;
-use Drupal\Core\Config\Entity\ConfigEntityTypeInterface;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Render\Markup;
 
 define('DATASOURCE_ID_SEPARATOR', '/');

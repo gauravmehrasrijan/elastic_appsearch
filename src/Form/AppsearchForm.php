@@ -10,7 +10,7 @@ use GuzzleHttp\ClientInterface;
 use Drupal\Core\Database\Driver\mysql\Connection;
 
 /**
- * Class AppsearchForm.
+ * Class Appsearch Form.
  */
 class AppsearchForm extends ConfigFormBase {
 
@@ -80,7 +80,7 @@ class AppsearchForm extends ConfigFormBase {
     $form['api_endpoint'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Api Endpoint'),
-      '#description' => $this->t($api_endpoint_helptext),
+      '#description' => $api_endpoint_helptext,
       '#maxlength' => 255,
       '#size' => 100,
       '#default_value' => $config->get('api_endpoint'),
@@ -88,7 +88,7 @@ class AppsearchForm extends ConfigFormBase {
     $form['api_private_key'] = [
       '#type' => 'textfield',
       '#title' => $this->t('API Private Key'),
-      '#description' => $this->t($api_private_key_helptext),
+      '#description' => $api_private_key_helptext,
       '#default_value' => $config->get('api_private_key'),
     ];
     $form['engine_name'] = [

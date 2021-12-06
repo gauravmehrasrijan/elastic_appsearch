@@ -2,7 +2,6 @@
 
 namespace Drupal\elastic_appsearch\Form;
 
-use Drupal\node\Entity\Node;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -10,7 +9,7 @@ use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\elastic_appsearch\Entity\EngineInterface;
 
 /**
- * Class EngineStatusForm.
+ * Class Engine Status Form.
  */
 class EngineStatusForm extends FormBase {
 
@@ -78,7 +77,8 @@ class EngineStatusForm extends FormBase {
     ];
     $batch_size = [
       '#type' => 'textfield',
-    // $index->getOption('cron_limit', $this->config('search_api.settings')->get('default_cron_limit')),
+    // $index->getOption('cron_limit',
+    // $this->config('search_api.settings')->get('default_cron_limit')),
       '#default_value' => 100,
       '#size' => 4,
       '#attributes' => [

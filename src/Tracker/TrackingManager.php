@@ -2,14 +2,10 @@
 
 namespace Drupal\elastic_appsearch\Tracker;
 
-use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\NodeInterface;
-use Drupal\elastic_appsearch\Utility\Common;
-use Drupal\elastic_appsearch\Entity\Engine;
 use Drupal\elastic_appsearch\Utility\Database;
 
 /**
- * Class TrackingManager.
+ * Class Tracking Manager.
  */
 class TrackingManager {
 

@@ -3,7 +3,6 @@
 namespace Drupal\elastic_appsearch\Utility;
 
 use Drupal\elastic_appsearch\Entity\EngineInterface;
-use Drupal\elastic_appsearch\Utility\Database;
 
 /**
  * {@inheritdoc}
@@ -12,7 +11,7 @@ class BatchHelper {
 
   const DEFAULTS = [
     'batch_size' => NULL,
-    'limit' => -1
+    'limit' => -1,
   ];
 
   /**
