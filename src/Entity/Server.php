@@ -45,11 +45,6 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
  *     "status",
  *     "publicKey",
  *   },
- *   config_export = {
- *     "id",
- *     "label",
- *     "uuid",
- *   },
  *   links = {
  *     "canonical" = "/admin/config/search/elastic-appsearch/server/{elastic_appsearch_server}",
  *     "add-form" = "/admin/config/search/elastic-appsearch/server/add",
