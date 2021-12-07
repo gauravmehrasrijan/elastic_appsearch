@@ -34,7 +34,22 @@ use Drupal\elastic_appsearch\Utility\BatchHelper;
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",
- *     "uuid" = "uuid"
+ *     "uuid" = "uuid",
+ *     "language" = "language",
+ *     "server" = "server",
+ *     "datasources" = "datasources",
+ *     "schema" = "schema",
+ *     "status" = "status",
+ *   },
+ *   config_export = {
+ *     "id",
+ *     "label",
+ *     "uuid",
+ *     "language",
+ *     "server",
+ *     "datasources",
+ *     "schema",
+ *     "status",
  *   },
  *   links = {
  *     "canonical" = "/admin/config/search/elastic-appsearch/engine/{elastic_appsearch_engine}",

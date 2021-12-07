@@ -28,7 +28,22 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",
- *     "uuid" = "uuid"
+ *     "uuid" = "uuid",
+ *     "description" = "description",
+ *     "host" = "host",
+ *     "secret" = "secret",
+ *     "status" = "status",
+ *     "publicKey" = "publicKey",
+ *   },
+ *   config_export = {
+ *     "id",
+ *     "label",
+ *     "uuid",
+ *     "description",
+ *     "host",
+ *     "secret",
+ *     "status",
+ *     "publicKey",
  *   },
  *   config_export = {
  *     "id",
