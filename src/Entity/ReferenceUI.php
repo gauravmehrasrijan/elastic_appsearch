@@ -28,6 +28,25 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
  *     "id" = "id",
  *     "label" = "label",
  *     "uuid" = "uuid"
+ *     "engine" = "engine"
+ *     "field_title" = "field_title"
+ *     "field_url" = "field_url"
+ *     "fields_filter" = "fields_filter"
+ *     "fields_filter_searchable" = "fields_filter_searchable"
+ *     "fields_filter_disjunctive" = "fields_filter_disjunctive"
+ *     "fields_sort" = "fields_sort"
+ *   },
+ *   config_export = {
+ *     "id",
+ *     "label",
+ *     "uuid",
+ *     "engine",
+ *     "field_title",
+ *     "field_url",
+ *     "fields_filter",
+ *     "fields_filter_searchable",
+ *     "fields_filter_disjunctive",
+ *     "fields_sort",
  *   },
  *   links = {
  *     "canonical" = "/admin/config/search/elastic-appsearch/referenceui/{elastic_appsearch_referenceui}",
