@@ -27,14 +27,14 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",
- *     "uuid" = "uuid"
- *     "engine" = "engine"
- *     "field_title" = "field_title"
- *     "field_url" = "field_url"
- *     "fields_filter" = "fields_filter"
- *     "fields_filter_searchable" = "fields_filter_searchable"
- *     "fields_filter_disjunctive" = "fields_filter_disjunctive"
- *     "fields_sort" = "fields_sort"
+ *     "uuid" = "uuid",
+ *     "engine" = "engine",
+ *     "field_title" = "field_title",
+ *     "field_url" = "field_url",
+ *     "fields_filter" = "fields_filter",
+ *     "fields_filter_searchable" = "fields_filter_searchable",
+ *     "fields_filter_disjunctive" = "fields_filter_disjunctive",
+ *     "fields_sort" = "fields_sort",
  *   },
  *   config_export = {
  *     "id",
