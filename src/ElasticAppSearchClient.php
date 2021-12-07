@@ -80,7 +80,7 @@ class ElasticAppSearchClient implements ElasticAppsearchClientInterface {
    */
   public function setEngine($engine) {
     $this->engine = $this->client->getEngine($engine);
-    return this;
+    return $this;
   }
 
 }
